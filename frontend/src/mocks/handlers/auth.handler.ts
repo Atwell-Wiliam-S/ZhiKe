@@ -1,5 +1,5 @@
-import { rest } from 'msw'
-import type { LoginRequest, LoginResponse, UserInfoDTO, RoleDTO } from '@/types/api'
+import { http } from 'msw';
+import type { LoginRequest, LoginResponse, UserInfoDTO, RoleDTO } from '@/types/api';
 
 // Mock 数据
 const mockRoles: RoleDTO[] = [
@@ -50,7 +50,7 @@ const mockUsers: Record<string, LoginResponse> = {
 // Handlers
 export const authHandlers = [
   // 登录
-  rest.post('/api/auth/login', (req, res, ctx) => {
+  http.post('/api/auth/login', (req, res, ctx) => {
     const { username, password } = req.body as LoginRequest
     
     // 简单的用户名验证
@@ -78,7 +78,7 @@ export const authHandlers = [
   }),
   
   // 获取用户信息
-  rest.get('/api/auth/info', (req, res, ctx) => {
+  http.get('/api/auth/info', (req, res, ctx) => {
     const token = req.headers.get('Authorization')?.replace('Bearer ', '')
     
     // 根据 token 模拟获取用户信息
@@ -120,7 +120,7 @@ export const authHandlers = [
   }),
   
   // 登出
-  rest.post('/api/auth/logout', (req, res, ctx) => {
+  http.post('/api/auth/logout', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

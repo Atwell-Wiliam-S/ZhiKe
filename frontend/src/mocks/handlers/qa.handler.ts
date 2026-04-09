@@ -1,4 +1,4 @@
-import { rest } from 'msw'
+import { http } from 'msw'
 import type { QaLogDTO, ContextFragment } from '@/types/api'
 
 // Mock 数据
@@ -56,7 +56,7 @@ function createSSEStream(answer: string, sources: ContextFragment[]) {
 // Handlers
 export const qaHandlers = [
   // 流式问答
-  rest.post('/api/qa/chat-stream', (req, res, ctx) => {
+  http.post('/api/qa/chat-stream', (req, res, ctx) => {
     const { question, videoId } = req.body as { question: string; videoId: number };
     
     // 模拟回答
@@ -77,7 +77,7 @@ export const qaHandlers = [
   }),
   
   // 问答历史
-  rest.get('/api/qa/history', (req, res, ctx) => {
+  http.get('/api/qa/history', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

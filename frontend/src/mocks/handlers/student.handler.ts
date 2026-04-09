@@ -1,4 +1,4 @@
-import { rest } from 'msw'
+import { http } from 'msw'
 import type { PlayInfoDTO, FragmentDTO } from '@/types/api'
 
 // Mock 数据
@@ -62,7 +62,7 @@ const mockPlayInfo: PlayInfoDTO = {
 // Handlers
 export const studentHandlers = [
   // 课程列表
-  rest.get('/api/student/courses', (req, res, ctx) => {
+  http.get('/api/student/courses', (req, res, ctx) => {
     const keyword = req.url.searchParams.get('keyword')
     const courses = keyword 
       ? mockCourses.filter(c => c.title.includes(keyword))
@@ -86,7 +86,7 @@ export const studentHandlers = [
   }),
   
   // 课程详情
-  rest.get('/api/student/courses/:id', (req, res, ctx) => {
+  http.get('/api/student/courses/:id', (req, res, ctx) => {
     const { id } = req.params
     const course = mockCourses.find(c => c.id === parseInt(id))
     
@@ -114,7 +114,7 @@ export const studentHandlers = [
   }),
   
   // 播放信息
-  rest.get('/api/student/videos/:id/play-info', (req, res, ctx) => {
+  http.get('/api/student/videos/:id/play-info', (req, res, ctx) => {
     const { id } = req.params
     
     return res(
@@ -129,7 +129,7 @@ export const studentHandlers = [
   }),
   
   // 心跳上报
-  rest.post('/api/student/records/heartbeat', (req, res, ctx) => {
+  http.post('/api/student/records/heartbeat', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -142,7 +142,7 @@ export const studentHandlers = [
   }),
   
   // 保存进度
-  rest.post('/api/student/records/progress', (req, res, ctx) => {
+  http.post('/api/student/records/progress', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -155,7 +155,7 @@ export const studentHandlers = [
   }),
   
   // 添加笔记
-  rest.post('/api/student/notes', (req, res, ctx) => {
+  http.post('/api/student/notes', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

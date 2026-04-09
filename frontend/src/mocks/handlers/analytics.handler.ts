@@ -1,4 +1,4 @@
-import { rest } from 'msw'
+import { http } from 'msw'
 import type { HeatmapDTO, ClassOverviewDTO } from '@/types/api'
 
 // Mock 数据
@@ -41,7 +41,7 @@ const mockClassOverview: ClassOverviewDTO = {
 // Handlers
 export const analyticsHandlers = [
   // 难点热力图
-  rest.get('/api/analytics/heatmap', (req, res, ctx) => {
+  http.get('/api/analytics/heatmap', (req, res, ctx) => {
     const { courseId, videoId } = req.url.searchParams
     
     return res(
@@ -56,7 +56,7 @@ export const analyticsHandlers = [
   }),
   
   // 班级学情概览
-  rest.get('/api/analytics/class-overview', (req, res, ctx) => {
+  http.get('/api/analytics/class-overview', (req, res, ctx) => {
     const { courseId } = req.url.searchParams
     
     return res(
@@ -71,7 +71,7 @@ export const analyticsHandlers = [
   }),
   
   // 学生学习画像
-  rest.get('/api/analytics/student-profile', (req, res, ctx) => {
+  http.get('/api/analytics/student-profile', (req, res, ctx) => {
     const { studentId } = req.url.searchParams
     
     return res(
@@ -94,7 +94,7 @@ export const analyticsHandlers = [
   }),
   
   // 高频困惑词云
-  rest.get('/api/analytics/wordcloud', (req, res, ctx) => {
+  http.get('/api/analytics/wordcloud', (req, res, ctx) => {
     const { courseId } = req.url.searchParams
     
     return res(

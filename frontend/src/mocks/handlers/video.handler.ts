@@ -1,4 +1,4 @@
-import { rest } from 'msw'
+import { http } from 'msw'
 import type { VideoDTO, FragmentDTO } from '@/types/api'
 
 // Mock 数据
@@ -61,7 +61,7 @@ const mockFragments: FragmentDTO[] = [
 // Handlers
 export const videoHandlers = [
   // 教师视频列表
-  rest.get('/api/teacher/videos', (req, res, ctx) => {
+  http.get('/api/teacher/videos', (req, res, ctx) => {
     const courseId = req.url.searchParams.get('courseId')
     const videos = courseId 
       ? mockVideos.filter(v => v.courseId === parseInt(courseId))
@@ -85,7 +85,7 @@ export const videoHandlers = [
   }),
   
   // 知识片段列表
-  rest.get('/api/teacher/fragments', (req, res, ctx) => {
+  http.get('/api/teacher/fragments', (req, res, ctx) => {
     const videoId = req.url.searchParams.get('videoId')
     const fragments = videoId 
       ? mockFragments.filter(f => f.videoId === parseInt(videoId))
@@ -103,7 +103,7 @@ export const videoHandlers = [
   }),
   
   // 获取视频签名URL
-  rest.get('/api/video/:id/sign-url', (req, res, ctx) => {
+  http.get('/api/video/:id/sign-url', (req, res, ctx) => {
     const { id } = req.params
     
     return res(
@@ -120,7 +120,7 @@ export const videoHandlers = [
   }),
   
   // 视频解析状态
-  rest.get('/api/video/:id/status', (req, res, ctx) => {
+  http.get('/api/video/:id/status', (req, res, ctx) => {
     const { id } = req.params
     const video = mockVideos.find(v => v.id === parseInt(id))
     
