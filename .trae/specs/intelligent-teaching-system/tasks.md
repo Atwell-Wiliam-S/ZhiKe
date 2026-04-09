@@ -15,7 +15,7 @@
   - `programmatic` TR-1.2: 通用响应格式正确，异常处理生效
 - **Notes**: 基础架构是整个项目的基础，必须确保搭建正确
 
-## [/] 任务 2: 安全模块实现
+## [x] 任务 2: 安全模块实现
 - **Priority**: P0
 - **Depends On**: 任务 1
 - **Description**:
@@ -31,7 +31,7 @@
   - `programmatic` TR-2.3: 不同角色权限隔离正确
 - **Notes**: 安全模块是系统的核心，必须确保实现正确
 
-## [ ] 任务 3: 前端基础架构搭建
+## [x] 任务 3: 前端基础架构搭建
 - **Priority**: P0
 - **Depends On**: None
 - **Description**:
@@ -47,7 +47,7 @@
   - `human-judgment` TR-3.2: 基础页面布局正确
 - **Notes**: 前端基础架构搭建完成后，才能进行具体页面开发
 
-## [ ] 任务 4: AI 适配器模块实现
+## [x] 任务 4: AI 适配器模块实现
 - **Priority**: P0
 - **Depends On**: 任务 1
 - **Description**:
@@ -62,7 +62,7 @@
   - `programmatic` TR-4.2: 视觉分析和语音转写功能正常
 - **Notes**: AI 适配器是智能问答和视频分析的基础
 
-## [ ] 任务 5: 数据库初始化与模型实现
+## [x] 任务 5: 数据库初始化与模型实现
 - **Priority**: P0
 - **Depends On**: 任务 1
 - **Description**:
@@ -77,7 +77,7 @@
   - `programmatic` TR-5.3: CRUD 操作正常
 - **Notes**: 数据库是系统的基础，必须确保设计和实现正确
 
-## [ ] 任务 6: 视频模块实现
+## [/] 任务 6: 视频模块实现
 - **Priority**: P1
 - **Depends On**: 任务 2, 任务 4, 任务 5
 - **Description**:
