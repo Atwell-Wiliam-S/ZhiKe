@@ -1,73 +1,7 @@
 <template>
   <div class="student-home">
     <!-- Top Navigation -->
-    <header class="top-nav">
-      <div class="nav-container">
-        <div class="nav-left">
-          <div class="logo">
-            <h1>ZhiKe</h1>
-            <div class="logo-dot"></div>
-          </div>
-        </div>
-        <div class="nav-right">
-          <button
-            class="nav-button theme-toggle"
-            @click="toggleTheme"
-            aria-label="切换主题"
-          >
-            <Sun v-if="isDarkTheme" :size="20" />
-            <Moon v-else :size="20" />
-          </button>
-          <button
-            class="nav-button notification"
-            @click="toggleNotifications"
-            aria-label="通知"
-          >
-            <Bell :size="20" />
-            <span v-if="unreadNotifications > 0" class="notification-badge" :aria-label="`${unreadNotifications} 条未读通知`">{{ unreadNotifications }}</span>
-          </button>
-          <div class="role-badge">
-            学生
-          </div>
-          <div class="user-menu">
-            <button
-              class="user-menu-button"
-              @click="toggleUserMenu"
-              aria-label="用户菜单"
-            >
-              <div class="user-avatar">
-                <span>{{ userNameInitial }}</span>
-              </div>
-              <ChevronDown :size="16" />
-            </button>
-            <div v-if="isUserMenuOpen" class="user-menu-dropdown">
-              <div class="user-menu-header">
-                <div class="user-avatar large">
-                  <span>{{ userNameInitial }}</span>
-                </div>
-                <div class="user-info">
-                  <div class="user-name">{{ userName }}</div>
-                  <div class="user-email">{{ userEmail }}</div>
-                </div>
-              </div>
-              <div class="user-menu-divider"></div>
-              <button class="user-menu-item">
-                <User :size="16" />
-                <span>个人资料</span>
-              </button>
-              <button class="user-menu-item">
-                <Settings :size="16" />
-                <span>设置</span>
-              </button>
-              <button class="user-menu-item" @click="logout">
-                <LogOut :size="16" />
-                <span>退出登录</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+    <StudentTopNav />
 
     <!-- Main Content -->
     <main class="main-content">
@@ -204,68 +138,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 import { useUserStore } from '@/stores/user';
-import { useThemeStore } from '@/stores/theme';
-import { useNotificationStore } from '@/stores/notification';
-import { Sun, Moon, Bell, ChevronDown, ChevronRight, User, Settings, LogOut, BookOpen, PlayCircle, HelpCircle, FileText, BarChart3, Shield, Info } from 'lucide-vue-next';
+import { ChevronRight, BookOpen, PlayCircle, HelpCircle, FileText, BarChart3, Shield, Info, Settings } from 'lucide-vue-next';
+import StudentTopNav from '@/components/ui/StudentTopNav.vue';
 
-const router = useRouter();
 const userStore = useUserStore();
-const themeStore = useThemeStore();
-const notificationStore = useNotificationStore();
-
-// State
-const isUserMenuOpen = ref(false);
 
 // Computed properties
-const isDarkTheme = computed(() => themeStore.isDark);
-const unreadNotifications = computed(() => notificationStore.unreadCount);
 const userName = computed(() => userStore.userInfo?.username || '学生');
-const userEmail = computed(() => userStore.userInfo?.email || 'student@example.com');
-const userNameInitial = computed(() => {
-  const name = userName.value;
-  return name.charAt(0).toUpperCase();
-});
-
-// Methods
-const toggleTheme = () => {
-  themeStore.toggleTheme();
-};
-
-const toggleUserMenu = () => {
-  isUserMenuOpen.value = !isUserMenuOpen.value;
-};
-
-const toggleNotifications = () => {
-  notificationStore.openDrawer();
-};
-
-const logout = () => {
-  userStore.logout();
-  router.push('/login');
-};
-
-// Close dropdowns when clicking outside
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement;
-  if (!target.closest('.user-menu')) {
-    isUserMenuOpen.value = false;
-  }
-};
-
-// Add event listener
-window.addEventListener('click', handleClickOutside);
-
-// Cleanup
-const cleanup = () => {
-  window.removeEventListener('click', handleClickOutside);
-};
-
-// Register cleanup function
-import { onUnmounted } from 'vue';
-onUnmounted(cleanup);
 </script>
 
 <style scoped>
@@ -273,200 +154,6 @@ onUnmounted(cleanup);
   min-height: 100vh;
   background: var(--color-bg-canvas, #f8fafc);
   color: var(--color-text-primary, #0f172a);
-}
-
-/* Top Navigation */
-.top-nav {
-  height: 64px;
-  background: var(--color-bg-card, #ffffff);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.nav-container {
-  max-width: var(--container-2xl, 1280px);
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.nav-left {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-}
-
-.logo h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--color-text-primary, #0f172a);
-}
-
-.logo-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--color-accent, #6366f1);
-  border-radius: 50%;
-  margin-left: 0.5rem;
-}
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.nav-button {
-  background: none;
-  border: none;
-  color: var(--color-text-secondary, #64748b);
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: var(--radius-md, 8px);
-  transition: all 0.2s ease;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-button:hover {
-  background: var(--color-bg-hover, #f1f5f9);
-  color: var(--color-text-primary, #0f172a);
-}
-
-.notification-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: var(--color-danger, #ef4444);
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.role-badge {
-  background: var(--color-accent-subtle, rgba(99, 102, 241, 0.1));
-  color: var(--color-accent, #6366f1);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full, 9999px);
-}
-
-.user-menu {
-  position: relative;
-}
-
-.user-menu-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: var(--radius-md, 8px);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.user-menu-button:hover {
-  background: var(--color-bg-hover, #f1f5f9);
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--color-accent, #6366f1);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.user-avatar.large {
-  width: 48px;
-  height: 48px;
-  font-size: 1.25rem;
-}
-
-.user-menu-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 0.5rem;
-  background: var(--color-bg-card, #ffffff);
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
-  width: 240px;
-  z-index: 1000;
-  overflow: hidden;
-}
-
-.user-menu-header {
-  padding: 1rem;
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.user-info {
-  flex: 1;
-}
-
-.user-name {
-  font-weight: 600;
-  color: var(--color-text-primary, #0f172a);
-  margin-bottom: 0.25rem;
-}
-
-.user-email {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary, #64748b);
-}
-
-.user-menu-divider {
-  height: 1px;
-  background: var(--color-border, #e2e8f0);
-}
-
-.user-menu-item {
-  width: 100%;
-  background: none;
-  border: none;
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--color-text-primary, #0f172a);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-}
-
-.user-menu-item:hover {
-  background: var(--color-bg-hover, #f1f5f9);
 }
 
 /* Main Content */
@@ -714,18 +401,6 @@ onUnmounted(cleanup);
 }
 
 @media (max-width: 767px) {
-  .top-nav {
-    height: 56px;
-  }
-  
-  .nav-container {
-    padding: 0 16px;
-  }
-  
-  .logo h1 {
-    font-size: 1.25rem;
-  }
-  
   .hero-section {
     padding: 24px 0 16px;
   }

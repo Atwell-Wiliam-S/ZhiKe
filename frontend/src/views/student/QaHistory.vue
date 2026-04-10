@@ -1,5 +1,8 @@
 <template>
-  <div class="qa-history">
+  <div class="qa-page">
+    <!-- 顶部导航 -->
+    <StudentTopNav />
+
     <!-- 筛选栏 -->
     <div class="filter-bar">
       <div class="filter-left">
@@ -97,6 +100,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import Input from '@/components/ui/Input.vue'
+import StudentTopNav from '@/components/ui/StudentTopNav.vue'
 import { usePagination } from '@/composables/usePagination'
 import type { QaLogDTO } from '@/types/api'
 import { qaApi } from '@/api/qa'
@@ -158,8 +162,14 @@ const goToVideoLearning = () => {
 </script>
 
 <style scoped>
+.qa-page {
+  min-height: 100vh;
+  background: var(--color-bg-canvas);
+  padding-top: 76px;
+}
+
 .qa-history {
-  padding: 24px;
+  padding: 0 24px;
   max-width: 1200px;
   margin: 0 auto;
 }

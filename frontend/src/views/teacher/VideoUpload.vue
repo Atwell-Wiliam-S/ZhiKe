@@ -286,10 +286,10 @@ onBeforeUnmount(() => {
               <span v-if="!isSidebarCollapsed">学情分析</span>
             </router-link>
           </li>
-          <li class="nav-item" :class="{ active: $route.path === '/teacher/upload' }">
-            <router-link to="/teacher/upload" class="nav-link">
-              <Video :size="20" />
-              <span v-if="!isSidebarCollapsed">视频管理</span>
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/courses' }">
+            <router-link to="/teacher/courses" class="nav-link">
+              <BookOpen :size="20" />
+              <span v-if="!isSidebarCollapsed">课程管理</span>
             </router-link>
           </li>
         </ul>

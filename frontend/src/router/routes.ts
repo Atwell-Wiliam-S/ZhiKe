@@ -60,6 +60,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, role: 'TEACHER', title: '学情分析' },
   },
   {
+    path: '/teacher/courses',
+    name: 'CourseManagement',
+    component: () => import('@/views/teacher/CourseManagement.vue'),
+    meta: { requiresAuth: true, role: 'TEACHER', title: '课程管理' },
+  },
+  {
     path: '/teacher/upload',
     name: 'VideoUpload',
     component: () => import('@/views/teacher/VideoUpload.vue'),

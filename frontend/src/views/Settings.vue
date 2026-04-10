@@ -1,5 +1,8 @@
 <template>
   <div class="settings-page">
+    <!-- 顶部导航 -->
+    <StudentTopNav />
+
     <div class="settings-container">
       <!-- 左侧设置导航 -->
       <nav class="settings-nav" aria-label="设置导航">
@@ -161,6 +164,7 @@ import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useThemeStore } from '@/stores/theme'
 import { User, Palette, Shield, Bell, Camera, Moon, Sun, Monitor, Eye, EyeOff } from 'lucide-vue-next'
+import StudentTopNav from '@/components/ui/StudentTopNav.vue'
 
 const userStore = useUserStore()
 const themeStore = useThemeStore()
@@ -296,7 +300,10 @@ selectedTheme.value = themeStore.currentTheme
 .settings-page {
   min-height: 100vh;
   background-color: var(--color-bg-canvas);
-  padding: 24px;
+  padding-top: 76px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
 }
 
 .settings-container {

@@ -1,5 +1,8 @@
 <template>
-  <div class="notes-list">
+  <div class="notes-page">
+    <!-- 顶部导航 -->
+    <StudentTopNav />
+
     <!-- 筛选栏 -->
     <div class="filter-bar">
       <div class="filter-left">
@@ -115,6 +118,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, StickyNote, Lock, Unlock, Pencil, Trash2 } from 'lucide-vue-next'
 import Input from '@/components/ui/Input.vue'
+import StudentTopNav from '@/components/ui/StudentTopNav.vue'
 import { studentApi } from '@/api/student'
 import type { NoteDTO, CourseDTO, VideoDTO } from '@/types/api'
 import { formatDate } from '@/utils/format'
@@ -300,8 +304,14 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.notes-page {
+  min-height: 100vh;
+  background: var(--color-bg-canvas);
+  padding-top: 76px;
+}
+
 .notes-list {
-  padding: 24px;
+  padding: 0 24px;
   max-width: 1200px;
   margin: 0 auto;
 }

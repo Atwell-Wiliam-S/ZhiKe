@@ -1,5 +1,8 @@
 <template>
   <div class="video-learning">
+    <!-- Top Navigation -->
+    <StudentTopNav />
+
     <!-- Main Content -->
     <div class="content-container">
       <!-- Left Column (70%) -->
@@ -176,7 +179,26 @@
                   </button>
                 </div>
               </div>
-              <div class="note-content">{{ note.content }}</div>
+              <div class="note-content">
+                <template v-if="editingNoteIndex === noteIndex">
+                  <textarea
+                    v-model="editContent"
+                    class="note-edit-textarea"
+                    rows="3"
+                    @keyup.enter.ctrl="saveNoteEdit(noteIndex)"
+                    @keyup.esc="cancelNoteEdit"
+                  ></textarea>
+                  <div class="note-edit-actions">
+                    <button class="note-edit-save" @click="saveNoteEdit(noteIndex)" aria-label="保存">
+                      <Check :size="14" />
+                    </button>
+                    <button class="note-edit-cancel" @click="cancelNoteEdit" aria-label="取消">
+                      <X :size="14" />
+                    </button>
+                  </div>
+                </template>
+                <template v-else>{{ note.content }}</template>
+              </div>
             </div>
             <div v-if="notes.length === 0" class="empty-notes">
               <p>暂无笔记</p>
@@ -186,13 +208,26 @@
         </div>
       </div>
     </div>
+
+    <!-- 删除笔记确认对话框 -->
+    <div v-if="showDeleteConfirm" class="delete-confirm-overlay" @click.self="showDeleteConfirm = false">
+      <div class="delete-confirm-dialog">
+        <h4>确认删除</h4>
+        <p>确定要删除这条笔记吗？此操作不可恢复。</p>
+        <div class="delete-confirm-actions">
+          <button class="delete-cancel-btn" @click="showDeleteConfirm = false">取消</button>
+          <button class="delete-confirm-btn" @click="confirmDeleteNote">删除</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useThemeStore } from '@/stores/theme';
-import { Trash2, Send, ChevronDown, Plus, Pencil } from 'lucide-vue-next';
+import { Trash2, Send, ChevronDown, Plus, Pencil, X, Check } from 'lucide-vue-next';
+import StudentTopNav from '@/components/ui/StudentTopNav.vue';
 
 const themeStore = useThemeStore();
 
@@ -259,6 +294,12 @@ const notes = ref([
     content: '监督学习需要标签数据，无监督学习不需要'
   }
 ]);
+
+// Note editing state
+const editingNoteIndex = ref<number | null>(null);
+const editContent = ref('');
+const showDeleteConfirm = ref(false);
+const noteIndexToDelete = ref<number | null>(null);
 
 // Methods
 const handlePlay = () => {
@@ -365,16 +406,33 @@ const addNote = () => {
 };
 
 const editNote = (index: number) => {
-  // 简单实现，实际项目中可使用弹窗
-  const newContent = prompt('编辑笔记:', notes.value[index].content);
-  if (newContent) {
-    notes.value[index].content = newContent;
+  editingNoteIndex.value = index;
+  editContent.value = notes.value[index].content;
+};
+
+const saveNoteEdit = (index: number) => {
+  if (editContent.value.trim()) {
+    notes.value[index].content = editContent.value.trim();
   }
+  editingNoteIndex.value = null;
+  editContent.value = '';
+};
+
+const cancelNoteEdit = () => {
+  editingNoteIndex.value = null;
+  editContent.value = '';
 };
 
 const deleteNote = (index: number) => {
-  if (confirm('确定要删除这条笔记吗？')) {
-    notes.value.splice(index, 1);
+  noteIndexToDelete.value = index;
+  showDeleteConfirm.value = true;
+};
+
+const confirmDeleteNote = () => {
+  if (noteIndexToDelete.value !== null) {
+    notes.value.splice(noteIndexToDelete.value, 1);
+    showDeleteConfirm.value = false;
+    noteIndexToDelete.value = null;
   }
 };
 
@@ -427,7 +485,10 @@ onUnmounted(() => {
   min-height: 100vh;
   background: var(--color-bg-canvas, #f8fafc);
   color: var(--color-text-primary, #0f172a);
-  padding: 24px;
+  padding-top: 76px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
 }
 
 .content-container {
@@ -1009,6 +1070,131 @@ onUnmounted(() => {
 .empty-notes-hint {
   font-size: 0.75rem;
   margin-top: 4px;
+}
+
+/* Inline note editing */
+.note-edit-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--color-bg-input, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.note-edit-textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus, #6366f1);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle, rgba(99, 102, 241, 0.1));
+}
+
+.note-edit-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+.note-edit-save,
+.note-edit-cancel {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-secondary, #64748b);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.note-edit-save:hover {
+  background: var(--color-accent, #6366f1);
+  border-color: var(--color-accent, #6366f1);
+  color: white;
+}
+
+.note-edit-cancel:hover {
+  background: var(--color-bg-hover, #f1f5f9);
+}
+
+/* Delete confirmation overlay */
+.delete-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.delete-confirm-dialog {
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-lg, 12px);
+  padding: 24px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: var(--shadow-lg, 0 12px 40px rgba(0, 0, 0, 0.5));
+}
+
+.delete-confirm-dialog h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #0f172a);
+  margin: 0 0 8px;
+}
+
+.delete-confirm-dialog p {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #64748b);
+  margin: 0 0 20px;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.delete-cancel-btn {
+  padding: 8px 16px;
+  background: var(--color-bg-elevated, #f8fafc);
+  color: var(--color-text-secondary, #64748b);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 6px);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.delete-cancel-btn:hover {
+  border-color: var(--color-accent, #6366f1);
+  color: var(--color-accent, #6366f1);
+}
+
+.delete-confirm-btn {
+  padding: 8px 16px;
+  background: var(--color-danger, #ef4444);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md, 6px);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.delete-confirm-btn:hover {
+  background: var(--color-danger-hover, #dc2626);
 }
 
 /* Responsive Design */

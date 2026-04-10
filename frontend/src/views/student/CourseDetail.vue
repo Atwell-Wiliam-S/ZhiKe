@@ -2,10 +2,11 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { Star, ChevronDown, ChevronUp, Play, Check, Lock, Clock, Users, Video, Award, BookOpen, MessageSquare } from 'lucide-vue-next'
-import { useTheme } from '../../composables/useTheme'
+import { useThemeStore } from '@/stores/theme'
+import StudentTopNav from '@/components/ui/StudentTopNav.vue'
 
 const route = useRoute()
-useTheme()
+const themeStore = useThemeStore()
 const courseId = computed(() => route.params.courseId as string)
 
 // 模拟课程数据
@@ -140,14 +141,17 @@ const handleTabChange = (tab: string) => {
 
 <template>
   <div class="course-detail">
+    <!-- 顶部导航 -->
+    <StudentTopNav />
+
     <!-- 面包屑 -->
     <nav aria-label="面包屑" class="breadcrumb">
       <ol class="breadcrumb-list">
         <li class="breadcrumb-item">
-          <a href="/student/home" class="breadcrumb-link" aria-label="返回首页">首页</a>
+          <router-link to="/student/home" class="breadcrumb-link" aria-label="返回首页">首页</router-link>
         </li>
         <li class="breadcrumb-item">
-          <a href="/student/home" class="breadcrumb-link" aria-label="课程分类">课程</a>
+          <router-link to="/student/home" class="breadcrumb-link" aria-label="课程分类">课程</router-link>
         </li>
         <li class="breadcrumb-item">
           <span class="breadcrumb-current">{{ course.title }}</span>
@@ -608,6 +612,7 @@ const handleTabChange = (tab: string) => {
   background: var(--color-bg-canvas);
   color: var(--color-text-primary);
   transition: all var(--duration-normal) var(--ease-default);
+  padding-top: 60px;
 }
 
 /* 面包屑 */
