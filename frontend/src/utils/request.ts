@@ -1,7 +1,8 @@
 import axios from 'axios'
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
-import { useUserStore } from '@/stores/user'
+// import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
+import { convertKeysToSnakeCase, convertKeysToCamelCase } from './snake-case'
 
 /** 创建 Axios 实例 */
 const request: AxiosInstance = axios.create({
@@ -17,6 +18,15 @@ request.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+
+    if (config.params) {
+      config.params = convertKeysToSnakeCase(config.params)
+    }
+
+    if (config.data) {
+      config.data = convertKeysToSnakeCase(config.data)
+    }
+
     return config
   },
   (error) => Promise.reject(error)
@@ -25,7 +35,8 @@ request.interceptors.request.use(
 // ─── 响应拦截器 ───
 request.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { code, message, data } = response.data
+    const convertedData = convertKeysToCamelCase(response.data)
+    const { code, message, data } = convertedData
 
     if (code === 200) {
       return data  // 直接返回业务数据，剥离外层包装
@@ -42,8 +53,8 @@ request.interceptors.response.use(
       switch (status) {
         case 401:
           // Token 过期，自动登出
-          const userStore = useUserStore()
-          userStore.logout()
+          // const userStore = useUserStore()
+          // userStore.logout()
           window.location.href = '/login'
           ElMessage.error('登录已过期，请重新登录')
           break
