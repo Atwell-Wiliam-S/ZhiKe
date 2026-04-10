@@ -268,7 +268,8 @@ import {
   Pencil,
   Trash2,
   Info,
-  LogOut
+  LogOut,
+  GraduationCap
 } from 'lucide-vue-next';
 
 const themeStore = useThemeStore();
@@ -426,6 +427,12 @@ const handleLogout = () => {
 .logo {
   display: flex;
   align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  color: var(--color-accent, #6366f1);
+  flex-shrink: 0;
 }
 
 .logo h1 {

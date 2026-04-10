@@ -3,9 +3,10 @@
     <!-- Left Sidebar -->
     <aside class="sidebar" :class="{ 'collapsed': isSidebarCollapsed }">
       <div class="sidebar-header">
-        <div class="logo" v-if="!isSidebarCollapsed">
-          <h1>ZhiKe</h1>
-          <div class="logo-dot"></div>
+        <div class="logo">
+          <GraduationCap :size="24" class="logo-icon" />
+          <h1 v-if="!isSidebarCollapsed">ZhiKe</h1>
+          <div class="logo-dot" v-if="!isSidebarCollapsed"></div>
         </div>
         <div class="role-badge" v-if="!isSidebarCollapsed">
           管理员
@@ -249,7 +250,8 @@ import {
   Search,
   Pencil,
   Trash2,
-  LogOut
+  LogOut,
+  GraduationCap
 } from 'lucide-vue-next';
 
 const themeStore = useThemeStore();
@@ -385,6 +387,12 @@ const confirmDelete = () => {
 .logo {
   display: flex;
   align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  color: var(--color-accent, #F54E00);
+  flex-shrink: 0;
 }
 
 .logo h1 {
