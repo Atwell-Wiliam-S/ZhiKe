@@ -16,6 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * RAG智能问答服务实现类
+ * 实现基于检索增强生成的智能问答功能，包括流式回答和历史记录查询
+ */
 @Service
 public class RagServiceImpl implements RagService {
 
@@ -25,29 +29,35 @@ public class RagServiceImpl implements RagService {
     @Autowired
     private KnowledgeFragmentMapper knowledgeFragmentMapper;
 
+    /**
+     * 流式问答接口实现
+     * 使用SSE实现流式响应，模拟AI生成回答的过程
+     * 注意：当前为模拟实现，实际应集成DashScope等AI服务
+     * 
+     * @param userId 用户ID
+     * @param question 用户问题
+     * @param videoId 视频ID
+     * @param currentTime 当前观看时间点
+     * @return SseEmitter对象
+     */
     @Override
     public SseEmitter chatStream(Long userId, String question, Long videoId, Double currentTime) {
         SseEmitter emitter = new SseEmitter();
 
-        // 异步处理SSE流式响应
         new Thread(() -> {
             try {
-                // 1. 检索相关知识片段
                 List<KnowledgeFragment> fragments = knowledgeFragmentMapper.findByVideoId(videoId);
                 
-                // 2. 模拟AI生成回答
                 String[] answerChunks = {"傅里叶变换", "的物理意义", "是将信号从时域转换到", "频域进行分析，", "便于处理和理解信号的频率特性。"};
                 
-                // 3. 发送文本片段
                 for (String chunk : answerChunks) {
                     Map<String, Object> data = new HashMap<>();
                     data.put("type", "chunk");
                     data.put("content", chunk);
                     emitter.send(SseEmitter.event().name("message").data(data));
-                    Thread.sleep(500); // 模拟流式效果
+                    Thread.sleep(500);
                 }
                 
-                // 4. 发送参考来源
                 List<Map<String, Object>> contextFragments = new ArrayList<>();
                 for (int i = 0; i < Math.min(2, fragments.size()); i++) {
                     KnowledgeFragment fragment = fragments.get(i);
@@ -63,19 +73,17 @@ public class RagServiceImpl implements RagService {
                 sourceData.put("fragments", contextFragments);
                 emitter.send(SseEmitter.event().name("message").data(sourceData));
                 
-                // 5. 发送完成状态
                 Map<String, Object> doneData = new HashMap<>();
                 doneData.put("type", "done");
                 doneData.put("tokenUsage", 256);
                 emitter.send(SseEmitter.event().name("message").data(doneData));
                 
-                // 6. 保存问答日志
                 QaLog qaLog = new QaLog();
                 qaLog.setUserId(userId);
                 qaLog.setVideoId(videoId);
                 qaLog.setQuestion(question);
                 qaLog.setAnswer(String.join("", answerChunks));
-                qaLog.setContextFragments("[]"); // 这里应该序列化contextFragments
+                qaLog.setContextFragments("[]");
                 qaLog.setModelVersion("gpt-3.5-turbo");
                 qaLog.setTokenUsage(256);
                 qaLog.setCreatedAt(LocalDateTime.now());
@@ -100,6 +108,14 @@ public class RagServiceImpl implements RagService {
         return emitter;
     }
 
+    /**
+     * 获取用户问答历史记录
+     * 
+     * @param userId 用户ID
+     * @param page 页码
+     * @param pageSize 每页数量
+     * @return 包含问答历史记录和分页信息的Map
+     */
     @Override
     public Map<String, Object> getHistory(Long userId, Integer page, Integer pageSize) {
         Integer offset = (page - 1) * pageSize;

@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 学情分析服务实现类
+ * 实现学习行为数据的统计分析功能
+ * 注意：当前为模拟实现，实际应基于真实学习记录数据进行计算
+ */
 @Service
 public class AnalyticsServiceImpl implements AnalyticsService {
 
@@ -27,6 +32,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Autowired
     private QaLogMapper qaLogMapper;
 
+    /**
+     * 获取视频观看热力图数据
+     * 分析学生在视频不同时间段的观看行为
+     * 注意：当前为模拟实现，使用随机数据生成热力图
+     * 
+     * @param courseId 课程ID
+     * @param videoId 视频ID
+     * @return 包含热力图数据的Map
+     */
     @Override
     public Map<String, Object> getHeatmap(Long courseId, Long videoId) {
         Video video = videoMapper.findById(videoId);
@@ -37,7 +51,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         heatmap.put("duration", video.getDuration());
         heatmap.put("windowSize", 30);
 
-        // 模拟生成热力图数据
         List<Map<String, Object>> data = new ArrayList<>();
         for (int i = 0; i < video.getDuration() / 30; i++) {
             Map<String, Object> point = new HashMap<>();
@@ -52,6 +65,14 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return heatmap;
     }
 
+    /**
+     * 获取班级学习概览
+     * 统计班级整体的学习情况数据
+     * 注意：当前为模拟实现，使用硬编码数据
+     * 
+     * @param courseId 课程ID
+     * @return 包含班级概览数据的Map
+     */
     @Override
     public Map<String, Object> getClassOverview(Long courseId) {
         List<LearningRecord> records = learningRecordMapper.findByCourseId(courseId);
@@ -67,6 +88,14 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return overview;
     }
 
+    /**
+     * 获取学生个人画像
+     * 分析学生的学习行为、进度、薄弱点等
+     * 注意：当前为模拟实现，使用硬编码和模拟数据
+     * 
+     * @param studentId 学生ID
+     * @return 包含学生画像数据的Map
+     */
     @Override
     public Map<String, Object> getStudentProfile(Long studentId) {
         List<LearningRecord> records = learningRecordMapper.findByUserId(studentId);
@@ -96,6 +125,16 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return profile;
     }
 
+    /**
+     * 获取学习关键词词云
+     * 分析指定时间段内学生提问和学习内容中的关键词
+     * 注意：当前为模拟实现，使用预定义的关键词和随机数据
+     * 
+     * @param courseId 课程ID
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 包含词云数据的Map
+     */
     @Override
     public Map<String, Object> getWordcloud(Long courseId, String startDate, String endDate) {
         Map<String, Object> wordcloud = new HashMap<>();

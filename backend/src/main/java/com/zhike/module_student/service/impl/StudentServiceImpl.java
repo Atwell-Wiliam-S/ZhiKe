@@ -13,27 +13,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 学生服务实现类
+ * 实现学生端的课程学习、视频播放、笔记管理等功能
+ * 注意：当前为模拟实现，使用内存中的模拟数据
+ */
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    // 模拟课程数据
     private List<Course> mockCourses = new ArrayList<>();
     
-    // 模拟视频数据
     private List<Video> mockVideos = new ArrayList<>();
     
-    // 模拟知识片段数据
     private List<KnowledgeFragment> mockFragments = new ArrayList<>();
     
-    // 模拟笔记数据
     private List<Note> mockNotes = new ArrayList<>();
     
-    // 模拟学习记录
     private List<LearningRecord> mockLearningRecords = new ArrayList<>();
     
-    // 初始化模拟数据
+    /**
+     * 构造函数，初始化模拟数据
+     */
     public StudentServiceImpl() {
-        // 初始化课程数据
         Course course1 = new Course();
         course1.setId(1L);
         course1.setTitle("高等数学 A");
@@ -54,7 +55,6 @@ public class StudentServiceImpl implements StudentService {
         course2.setPublishedAt(java.time.LocalDateTime.now().minusWeeks(2));
         mockCourses.add(course2);
         
-        // 初始化视频数据
         Video video1 = new Video();
         video1.setId(1L);
         video1.setCourseId(1L);
@@ -77,7 +77,6 @@ public class StudentServiceImpl implements StudentService {
         video2.setOrderNum(2);
         mockVideos.add(video2);
         
-        // 初始化知识片段数据
         KnowledgeFragment fragment1 = new KnowledgeFragment();
         fragment1.setId(1L);
         fragment1.setVideoId(1L);
@@ -96,7 +95,6 @@ public class StudentServiceImpl implements StudentService {
         fragment2.setSummary("极限的 ε-δ 定义和基本计算方法");
         mockFragments.add(fragment2);
         
-        // 初始化学习记录
         LearningRecord record1 = new LearningRecord();
         record1.setUserId(1L);
         record1.setVideoId(1L);
@@ -107,9 +105,16 @@ public class StudentServiceImpl implements StudentService {
         mockLearningRecords.add(record1);
     }
 
+    /**
+     * 分页查询课程列表
+     * 
+     * @param keyword 搜索关键词
+     * @param page 页码
+     * @param pageSize 每页数量
+     * @return 分页结果，包含课程列表
+     */
     @Override
     public PageResult<Course> getCourses(String keyword, Integer page, Integer pageSize) {
-        // 模拟课程列表查询
         List<Course> result = new ArrayList<>();
         for (Course course : mockCourses) {
             if (keyword == null || course.getTitle().contains(keyword)) {
@@ -117,7 +122,6 @@ public class StudentServiceImpl implements StudentService {
             }
         }
         
-        // 模拟分页
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, result.size());
         List<Course> pageResult = new ArrayList<>();
@@ -125,7 +129,6 @@ public class StudentServiceImpl implements StudentService {
             pageResult = result.subList(start, end);
         }
         
-        // 构建分页结果
         PageResult<Course> pageResultObj = new PageResult<>();
         pageResultObj.setRecords(pageResult);
         pageResultObj.setTotal(result.size());
@@ -136,9 +139,14 @@ public class StudentServiceImpl implements StudentService {
         return pageResultObj;
     }
 
+    /**
+     * 获取课程详情
+     * 
+     * @param courseId 课程ID
+     * @return 包含课程详情和视频列表的Map
+     */
     @Override
     public Map<String, Object> getCourseDetail(Long courseId) {
-        // 模拟课程详情查询
         Course course = null;
         for (Course c : mockCourses) {
             if (c.getId().equals(courseId)) {
@@ -150,7 +158,6 @@ public class StudentServiceImpl implements StudentService {
             return null;
         }
         
-        // 查找该课程的视频
         List<Video> courseVideos = new ArrayList<>();
         for (Video video : mockVideos) {
             if (video.getCourseId().equals(courseId)) {
@@ -158,7 +165,6 @@ public class StudentServiceImpl implements StudentService {
             }
         }
         
-        // 构建返回结果
         Map<String, Object> result = new HashMap<>();
         result.put("course", course);
         result.put("videos", courseVideos);
@@ -166,9 +172,15 @@ public class StudentServiceImpl implements StudentService {
         return result;
     }
 
+    /**
+     * 获取视频播放信息
+     * 
+     * @param videoId 视频ID
+     * @param userId 用户ID
+     * @return 包含播放信息的Map
+     */
     @Override
     public Map<String, Object> getPlayInfo(Long videoId, Long userId) {
-        // 模拟视频播放信息查询
         Video video = null;
         for (Video v : mockVideos) {
             if (v.getId().equals(videoId)) {
@@ -180,7 +192,6 @@ public class StudentServiceImpl implements StudentService {
             return null;
         }
         
-        // 查找该视频的知识片段
         List<KnowledgeFragment> videoFragments = new ArrayList<>();
         for (KnowledgeFragment fragment : mockFragments) {
             if (fragment.getVideoId().equals(videoId)) {
@@ -188,7 +199,6 @@ public class StudentServiceImpl implements StudentService {
             }
         }
         
-        // 查找该用户的学习记录
         Double lastWatchTime = null;
         for (LearningRecord record : mockLearningRecords) {
             if (record.getUserId().equals(userId) && record.getVideoId().equals(videoId)) {
@@ -197,7 +207,6 @@ public class StudentServiceImpl implements StudentService {
             }
         }
         
-        // 构建返回结果
         Map<String, Object> result = new HashMap<>();
         result.put("video", video);
         result.put("signUrl", "https://oss.zhike.edu.cn/videos/math-01.mp4?OSSAccessKeyId=xxx&Signature=yyy&Expires=zzz");
@@ -207,10 +216,16 @@ public class StudentServiceImpl implements StudentService {
         return result;
     }
 
+    /**
+     * 视频观看心跳上报
+     * 
+     * @param userId 用户ID
+     * @param videoId 视频ID
+     * @param currentTime 当前观看时间点
+     * @param status 观看状态
+     */
     @Override
     public void heartbeat(Long userId, Long videoId, Double currentTime, String status) {
-        // 模拟心跳上报
-        // 查找或创建学习记录
         LearningRecord record = null;
         for (LearningRecord r : mockLearningRecords) {
             if (r.getUserId().equals(userId) && r.getVideoId().equals(videoId)) {
@@ -226,18 +241,22 @@ public class StudentServiceImpl implements StudentService {
             mockLearningRecords.add(record);
         }
         
-        // 更新学习记录
         record.setLastWatchTime(currentTime);
-        record.setTotalDuration(record.getTotalDuration() + 10); // 假设每10秒上报一次
+        record.setTotalDuration(record.getTotalDuration() + 10);
     }
 
+    /**
+     * 保存视频观看进度
+     * 
+     * @param userId 用户ID
+     * @param videoId 视频ID
+     * @param currentTime 当前观看时间点
+     * @param duration 视频总时长
+     */
     @Override
     public void saveProgress(Long userId, Long videoId, Double currentTime, Integer duration) {
-        // 模拟进度保存
-        // 计算进度百分比
         double progress = (currentTime / duration) * 100;
         
-        // 查找或创建学习记录
         LearningRecord record = null;
         for (LearningRecord r : mockLearningRecords) {
             if (r.getUserId().equals(userId) && r.getVideoId().equals(videoId)) {
@@ -253,7 +272,6 @@ public class StudentServiceImpl implements StudentService {
             mockLearningRecords.add(record);
         }
         
-        // 更新学习记录
         record.setProgress(progress);
         record.setLastWatchTime(currentTime);
         if (progress >= 95) {
@@ -261,9 +279,17 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    /**
+     * 添加学习笔记
+     * 
+     * @param userId 用户ID
+     * @param videoId 视频ID
+     * @param timestamp 笔记对应的时间点
+     * @param content 笔记内容
+     * @return 创建的笔记ID
+     */
     @Override
     public Long addNote(Long userId, Long videoId, Double timestamp, String content) {
-        // 模拟添加笔记
         Note note = new Note();
         note.setId((long) (mockNotes.size() + 1));
         note.setUserId(userId);
@@ -277,9 +303,15 @@ public class StudentServiceImpl implements StudentService {
         return note.getId();
     }
 
+    /**
+     * 获取视频的笔记列表
+     * 
+     * @param userId 用户ID
+     * @param videoId 视频ID
+     * @return 包含笔记列表的Map
+     */
     @Override
     public Map<String, Object> getNotes(Long userId, Long videoId) {
-        // 模拟获取笔记列表
         List<Note> result = new ArrayList<>();
         for (Note note : mockNotes) {
             if (note.getVideoId().equals(videoId)) {
@@ -287,14 +319,15 @@ public class StudentServiceImpl implements StudentService {
             }
         }
         
-        // 构建返回结果
         Map<String, Object> response = new HashMap<>();
         response.put("notes", result);
         
         return response;
     }
     
-    // 模拟学习记录类
+    /**
+     * 模拟学习记录内部类
+     */
     private static class LearningRecord {
         private Long userId;
         private Long videoId;
