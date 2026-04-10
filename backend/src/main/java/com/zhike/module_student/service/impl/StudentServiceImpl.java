@@ -126,13 +126,7 @@ public class StudentServiceImpl implements StudentService {
         }
         
         // 构建分页结果
-        PageResult<Course> pageResultObj = new PageResult<>();
-        pageResultObj.setRecords(pageResult);
-        pageResultObj.setTotal(result.size());
-        pageResultObj.setPage(page);
-        pageResultObj.setPageSize(pageSize);
-        pageResultObj.setTotalPages((int) Math.ceil((double) result.size() / pageSize));
-        
+        PageResult<Course> pageResultObj = PageResult.build((int) Math.ceil((double) result.size() / pageSize),pageResult,page,pageSize);
         return pageResultObj;
     }
 
