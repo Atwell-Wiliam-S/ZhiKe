@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Upload, Sparkles, Check, AlertCircle } from 'lucide-vue-next'
 
 // 上传状态
@@ -169,6 +169,13 @@ const handleCancel = () => {
     title: ''
   }
 }
+
+// 确保使用教师端浅色主题
+onMounted(() => {
+  const root = document.documentElement
+  root.setAttribute('data-theme', 'teacher-light')
+  root.style.colorScheme = 'light'
+})
 </script>
 
 <template>
