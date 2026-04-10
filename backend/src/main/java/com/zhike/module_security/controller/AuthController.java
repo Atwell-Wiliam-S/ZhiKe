@@ -6,11 +6,15 @@ import com.zhike.module_security.model.User;
 import com.zhike.module_security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +30,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Result<?> login(@RequestBody LoginRequest request) {
+    public Result<?> login(@Validated @RequestBody LoginRequest request) {
         User user = userService.findByUsername(request.getUsername());
         if (user == null || !userService.validatePassword(request.getPassword(), user.getPassword())) {
             return Result.error(401, "用户名或密码错误");
@@ -53,7 +57,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public Result<?> register(@RequestBody RegisterRequest request) {
+    public Result<?> register(@Validated @RequestBody RegisterRequest request) {
         User existingUser = userService.findByUsername(request.getUsername());
         if (existingUser != null) {
             return Result.error(400, "用户名已存在");
@@ -114,7 +118,9 @@ public class AuthController {
     }
 
     public static class LoginRequest {
+        @NotBlank(message = "用户名不能为空")
         private String username;
+        @NotBlank(message = "密码不能为空")
         private String password;
 
         public String getUsername() {
@@ -135,9 +141,15 @@ public class AuthController {
     }
 
     public static class RegisterRequest {
+        @NotBlank(message = "用户名不能为空")
+        @Size(min = 3, max = 50, message = "用户名长度必须在3-50之间")
         private String username;
+        @NotBlank(message = "密码不能为空")
+        @Size(min = 6, max = 100, message = "密码长度必须在6-100之间")
         private String password;
+        @NotBlank(message = "角色代码不能为空")
         private String roleCode;
+        @Email(message = "邮箱格式不正确")
         private String email;
 
         public String getUsername() {
