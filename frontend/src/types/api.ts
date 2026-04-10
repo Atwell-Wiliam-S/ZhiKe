@@ -270,3 +270,14 @@ export interface NoteDTO {
   isPublic: boolean;
   createdAt: string;
 }
+
+/** 通知 */
+export interface Notification {
+  id: number;
+  type: 'system' | 'course' | 'interaction';
+  title: string;
+  description: string;
+  isRead: boolean;
+  link?: string;
+  createdAt: string;
+}

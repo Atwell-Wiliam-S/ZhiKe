@@ -110,7 +110,7 @@
       <section class="feature-section">
         <ul class="feature-grid" role="list">
           <li class="feature-card">
-            <a href="#" class="feature-link">
+            <router-link to="/student/course/1" class="feature-link">
               <div class="feature-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
@@ -123,10 +123,10 @@
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </div>
-            </a>
+            </router-link>
           </li>
           <li class="feature-card">
-            <a href="#" class="feature-link">
+            <router-link to="/student/learn/1" class="feature-link">
               <div class="feature-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -141,10 +141,10 @@
                 </div>
                 <span class="progress-text">65% 完成</span>
               </div>
-            </a>
+            </router-link>
           </li>
           <li class="feature-card">
-            <a href="#" class="feature-link">
+            <router-link to="/student/learn/1" class="feature-link">
               <div class="feature-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20"></path>
@@ -158,10 +158,10 @@
                 <span class="status-dot"></span>
                 <span class="status-text">在线</span>
               </div>
-            </a>
+            </router-link>
           </li>
           <li class="feature-card">
-            <a href="#" class="feature-link">
+            <router-link to="/student/notes" class="feature-link">
               <div class="feature-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -174,7 +174,7 @@
               <h3 class="feature-title">我的笔记</h3>
               <p class="feature-description">查看我的学习笔记</p>
               <div class="feature-badge">12</div>
-            </a>
+            </router-link>
           </li>
           <li class="feature-card">
             <a href="#" class="feature-link">
@@ -192,7 +192,7 @@
             </a>
           </li>
           <li class="feature-card">
-            <a href="#" class="feature-link">
+            <router-link to="/settings" class="feature-link">
               <div class="feature-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="3"></circle>
@@ -206,7 +206,7 @@
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </div>
-            </a>
+            </router-link>
           </li>
         </ul>
       </section>
@@ -285,7 +285,6 @@ const notificationStore = useNotificationStore();
 
 // State
 const isUserMenuOpen = ref(false);
-const isNotificationsOpen = ref(false);
 
 // Computed properties
 const isDarkTheme = computed(() => themeStore.isDark);
@@ -304,16 +303,10 @@ const toggleTheme = () => {
 
 const toggleUserMenu = () => {
   isUserMenuOpen.value = !isUserMenuOpen.value;
-  if (isUserMenuOpen.value) {
-    isNotificationsOpen.value = false;
-  }
 };
 
 const toggleNotifications = () => {
-  isNotificationsOpen.value = !isNotificationsOpen.value;
-  if (isNotificationsOpen.value) {
-    isUserMenuOpen.value = false;
-  }
+  notificationStore.openDrawer();
 };
 
 const logout = () => {
@@ -324,9 +317,8 @@ const logout = () => {
 // Close dropdowns when clicking outside
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement;
-  if (!target.closest('.user-menu') && !target.closest('.notification')) {
+  if (!target.closest('.user-menu')) {
     isUserMenuOpen.value = false;
-    isNotificationsOpen.value = false;
   }
 };
 
