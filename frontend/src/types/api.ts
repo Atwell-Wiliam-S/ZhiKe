@@ -258,6 +258,7 @@ export interface NoteRequest {
   videoId: number;
   timestamp: number;         // 关联的视频时间点（秒）
   content: string;
+  isPublic?: boolean;
 }
 
 /** 笔记 */
