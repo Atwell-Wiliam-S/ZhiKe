@@ -38,10 +38,7 @@
                 placeholder="搜索知识片段..."
                 class="search-input"
               />
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
+              <Search :size="16" />
             </div>
           </div>
         </div>
@@ -102,24 +99,13 @@
               </div>
               <div class="segment-actions">
                 <button class="action-button" @click="editSegment(index)" aria-label="编辑片段">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
+                  <Pencil :size="16" />
                 </button>
                 <button class="action-button" @click="previewSegment(index)" aria-label="预览片段">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
+                  <Eye :size="16" />
                 </button>
                 <button class="action-button delete" @click="deleteSegment(index)" aria-label="删除片段">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                  </svg>
+                  <Trash2 :size="16" />
                 </button>
               </div>
             </div>
@@ -133,26 +119,16 @@
                 <span class="checkbox-label">全选</span>
               </label>
               <button class="batch-button" @click="batchDelete" :disabled="selectedSegments.length === 0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  <line x1="10" y1="11" x2="10" y2="17"></line>
-                  <line x1="14" y1="11" x2="14" y2="17"></line>
-                </svg>
+                <Trash2 :size="16" />
                 批量删除
               </button>
               <button class="batch-button" @click="batchConfirm" :disabled="selectedSegments.length === 0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <Check :size="16" />
                 批量确认
               </button>
             </div>
             <button class="add-segment-button" @click="addSegment">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+              <Plus :size="16" />
               添加片段
             </button>
           </div>
@@ -164,6 +140,14 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import {
+  Search,
+  Pencil,
+  Eye,
+  Trash2,
+  Check,
+  Plus
+} from 'lucide-vue-next';
 
 // State
 const selectedCourse = ref('机器学习基础');
@@ -724,50 +708,6 @@ const batchConfirm = () => {
 
   .add-segment-button {
     justify-content: center;
-  }
-}
-
-/* Dark Theme Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-canvas: #0f172a;
-    --color-bg-card: #1e293b;
-    --color-bg-elevated: #334155;
-    --color-bg-input: #334155;
-    --color-bg-hover: #334155;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #cbd5e1;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #334155;
-    --color-border-focus: #6366f1;
-    --color-accent: #6366f1;
-    --color-accent-subtle: rgba(99, 102, 241, 0.1);
-    --color-danger: #ef4444;
-    --radius-sm: 4px;
-    --radius-full: 9999px;
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* Light Theme */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-bg-canvas: #fdfdf8;
-    --color-bg-card: #ffffff;
-    --color-bg-elevated: #eeefe9;
-    --color-bg-input: #f1f5f9;
-    --color-bg-hover: #f1f5f9;
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #64748b;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #e2e8f0;
-    --color-border-focus: #0075de;
-    --color-accent: #0075de;
-    --color-accent-subtle: rgba(0, 117, 222, 0.15);
-    --color-danger: #ef4444;
-    --radius-sm: 4px;
-    --radius-full: 9999px;
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

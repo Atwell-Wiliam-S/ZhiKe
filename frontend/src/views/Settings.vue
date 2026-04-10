@@ -4,19 +4,19 @@
       <!-- 左侧设置导航 -->
       <nav class="settings-nav" aria-label="设置导航">
         <div class="nav-item" :class="{ active: activeTab === 'profile' }" @click="activeTab = 'profile'">
-          <span class="nav-icon user-icon">👤</span>
+          <span class="nav-icon"><User :size="18" /></span>
           <span class="nav-text">个人信息</span>
         </div>
         <div class="nav-item" :class="{ active: activeTab === 'theme' }" @click="activeTab = 'theme'" v-if="userRole === 'STUDENT'">
-          <span class="nav-icon palette-icon">🎨</span>
+          <span class="nav-icon"><Palette :size="18" /></span>
           <span class="nav-text">主题偏好</span>
         </div>
         <div class="nav-item" :class="{ active: activeTab === 'security' }" @click="activeTab = 'security'">
-          <span class="nav-icon shield-icon">🛡️</span>
+          <span class="nav-icon"><Shield :size="18" /></span>
           <span class="nav-text">安全设置</span>
         </div>
         <div class="nav-item" :class="{ active: activeTab === 'notification' }" @click="activeTab = 'notification'">
-          <span class="nav-icon bell-icon">🔔</span>
+          <span class="nav-icon"><Bell :size="18" /></span>
           <span class="nav-text">通知设置</span>
         </div>
       </nav>
@@ -32,7 +32,7 @@
               <div class="avatar-container">
                 <img :src="user.avatar || 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=default%20user%20avatar&image_size=square'" alt="用户头像" class="avatar">
                 <button class="avatar-upload-btn" aria-label="更换头像">
-                  📷
+                  <Camera :size="12" />
                 </button>
               </div>
             </div>
@@ -60,15 +60,15 @@
           <div class="theme-settings">
             <div class="theme-options">
               <div class="theme-option" :class="{ active: selectedTheme === 'student-dark' }" @click="selectedTheme = 'student-dark'">
-                <div class="theme-icon moon-icon">🌙</div>
+                <div class="theme-icon"><Moon :size="24" /></div>
                 <span class="theme-text">暗色模式</span>
               </div>
               <div class="theme-option" :class="{ active: selectedTheme === 'student-light' }" @click="selectedTheme = 'student-light'">
-                <div class="theme-icon sun-icon">☀️</div>
+                <div class="theme-icon"><Sun :size="24" /></div>
                 <span class="theme-text">亮色模式</span>
               </div>
               <div class="theme-option" :class="{ active: !hasSavedTheme }" @click="resetTheme">
-                <div class="theme-icon monitor-icon">🖥️</div>
+                <div class="theme-icon"><Monitor :size="24" /></div>
                 <span class="theme-text">跟随系统</span>
               </div>
             </div>
@@ -90,7 +90,8 @@
               <div class="password-input">
                 <input type="password" id="old-password" v-model="passwords.oldPassword">
                 <button class="toggle-password" @click="showOldPassword = !showOldPassword" aria-label="切换密码可见性">
-                  {{ showOldPassword ? '👁️' : '👁️‍🗨️' }}
+                  <Eye v-if="showOldPassword" :size="16" />
+                  <EyeOff v-else :size="16" />
                 </button>
               </div>
             </div>
@@ -159,6 +160,7 @@
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useThemeStore } from '@/stores/theme'
+import { User, Palette, Shield, Bell, Camera, Moon, Sun, Monitor, Eye, EyeOff } from 'lucide-vue-next'
 
 const userStore = useUserStore()
 const themeStore = useThemeStore()

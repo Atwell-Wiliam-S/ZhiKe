@@ -63,12 +63,7 @@
               </span>
             </div>
             <button class="ai-panel-clear" @click="clearChat" aria-label="清空对话">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                <line x1="10" y1="11" x2="10" y2="17"></line>
-                <line x1="14" y1="11" x2="14" y2="17"></line>
-              </svg>
+              <Trash2 :size="16" />
             </button>
           </div>
           <div class="ai-messages" ref="messagesRef" aria-live="polite" role="log">
@@ -120,10 +115,7 @@
               :disabled="!inputMessage.trim() || isSending"
               aria-label="发送消息"
             >
-              <svg v-if="!isSending" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
+              <Send v-if="!isSending" :size="20" />
               <div v-else class="spinner"></div>
             </button>
           </div>
@@ -137,9 +129,7 @@
           <div class="section-header">
             <h3>知识大纲</h3>
             <button class="collapse-button" @click="toggleOutline" aria-label="折叠知识大纲">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              <ChevronDown :size="16" />
             </button>
           </div>
           <div v-if="showOutline" class="outline-content">
@@ -166,10 +156,7 @@
           <div class="section-header">
             <h3>我的笔记</h3>
             <button class="add-note-button" @click="addNote" aria-label="添加笔记">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+              <Plus :size="16" />
             </button>
           </div>
           <div class="notes-list">
@@ -182,18 +169,10 @@
                 <span class="note-time">{{ formatTime(note.time) }}</span>
                 <div class="note-actions">
                   <button class="note-action-button" @click="editNote(noteIndex)" aria-label="编辑笔记">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
+                    <Pencil :size="14" />
                   </button>
                   <button class="note-action-button" @click="deleteNote(noteIndex)" aria-label="删除笔记">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      <line x1="10" y1="11" x2="10" y2="17"></line>
-                      <line x1="14" y1="11" x2="14" y2="17"></line>
-                    </svg>
+                    <Trash2 :size="14" />
                   </button>
                 </div>
               </div>
@@ -213,6 +192,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useThemeStore } from '@/stores/theme';
+import { Trash2, Send, ChevronDown, Plus, Pencil } from 'lucide-vue-next';
 
 const themeStore = useThemeStore();
 
@@ -1057,58 +1037,6 @@ onUnmounted(() => {
 
   .ai-messages {
     max-height: 180px;
-  }
-}
-
-/* Dark Theme Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-canvas: #0f172a;
-    --color-bg-card: #1e293b;
-    --color-bg-elevated: #334155;
-    --color-bg-input: #334155;
-    --color-bg-hover: #334155;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #cbd5e1;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #334155;
-    --color-border-focus: #6366f1;
-    --color-accent: #6366f1;
-    --color-accent-hover: #4f46e5;
-    --color-accent-subtle: rgba(99, 102, 241, 0.1);
-    --color-success: #10b981;
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-full: 9999px;
-    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* Light Theme */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-bg-canvas: #f8fafc;
-    --color-bg-card: #ffffff;
-    --color-bg-elevated: #f8fafc;
-    --color-bg-input: #f8fafc;
-    --color-bg-hover: #f1f5f9;
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #64748b;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #e2e8f0;
-    --color-border-focus: #0075de;
-    --color-accent: #0075de;
-    --color-accent-hover: #0056b3;
-    --color-accent-subtle: rgba(0, 117, 222, 0.15);
-    --color-success: #10b981;
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-full: 9999px;
-    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

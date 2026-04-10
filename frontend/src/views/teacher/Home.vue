@@ -15,81 +15,49 @@
         <ul class="nav-list">
           <li class="nav-item active">
             <router-link to="/teacher/home" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 3v18h18"></path>
-                <path d="M19 9H5"></path>
-                <path d="M16 14H5"></path>
-                <path d="M12 19H5"></path>
-              </svg>
+              <BarChart3 :size="20" />
               <span v-if="!isSidebarCollapsed">仪表盘</span>
             </router-link>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
-              </svg>
+              <BookOpen :size="20" />
               <span v-if="!isSidebarCollapsed">课程管理</span>
             </a>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-              </svg>
+              <Video :size="20" />
               <span v-if="!isSidebarCollapsed">视频管理</span>
             </a>
           </li>
           <li class="nav-item">
             <router-link to="/teacher/knowledge" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
+              <FileText :size="20" />
               <span v-if="!isSidebarCollapsed">知识片段</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link to="/teacher/analytics" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 20V10"></path>
-                <path d="M12 20V4"></path>
-                <path d="M6 20v-6"></path>
-              </svg>
+              <BarChart3 :size="20" />
               <span v-if="!isSidebarCollapsed">学情分析</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link to="/teacher/upload" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
+              <Video :size="20" />
               <span v-if="!isSidebarCollapsed">视频上传</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link to="/admin/users" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
+              <Users :size="20" />
               <span v-if="!isSidebarCollapsed">用户管理</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link to="/settings" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
+              <Settings :size="20" />
               <span v-if="!isSidebarCollapsed">系统设置</span>
             </router-link>
           </li>
@@ -101,12 +69,8 @@
           @click="toggleSidebar"
           :aria-label="isSidebarCollapsed ? '展开侧边栏' : '折叠侧边栏'"
         >
-          <svg v-if="!isSidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+          <ChevronLeft v-if="!isSidebarCollapsed" :size="20" />
+          <ChevronRight v-else :size="20" />
         </button>
         <div class="user-info" v-if="!isSidebarCollapsed">
           <div class="user-avatar">
@@ -134,30 +98,15 @@
               @click="toggleTheme"
               aria-label="切换主题"
             >
-              <svg v-if="isDarkTheme" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              </svg>
-              <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
+              <Sun v-if="isDarkTheme" :size="20" />
+              <Moon v-else :size="20" />
             </button>
             <button
               class="nav-button notification"
               @click="toggleNotifications"
               aria-label="通知"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              </svg>
+              <Bell :size="20" />
               <span v-if="unreadNotifications > 0" class="notification-badge" :aria-label="`${unreadNotifications} 条未读通知`">{{ unreadNotifications }}</span>
             </button>
           </div>
@@ -173,12 +122,7 @@
               <div class="kpi-label">总学生数</div>
             </div>
             <div class="kpi-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
+              <Users :size="24" />
             </div>
           </div>
           <div class="kpi-card">
@@ -187,9 +131,7 @@
               <div class="kpi-label">活跃课程</div>
             </div>
             <div class="kpi-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
-              </svg>
+              <BookOpen :size="24" />
             </div>
           </div>
           <div class="kpi-card">
@@ -197,23 +139,13 @@
               <div class="kpi-value">{{ kpiData.averageCompletion }}%</div>
               <div class="kpi-label">平均完成率</div>
               <div class="kpi-trend" :class="{ 'up': kpiData.completionTrend > 0, 'down': kpiData.completionTrend < 0 }">
-                <svg v-if="kpiData.completionTrend > 0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                  <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                  <polyline points="17 18 23 18 23 12"></polyline>
-                </svg>
+                <TrendingUp v-if="kpiData.completionTrend > 0" :size="16" />
+                <TrendingDown v-else :size="16" />
                 <span>{{ Math.abs(kpiData.completionTrend) }}%</span>
               </div>
             </div>
             <div class="kpi-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 20V10"></path>
-                <path d="M12 20V4"></path>
-                <path d="M6 20v-6"></path>
-              </svg>
+              <BarChart3 :size="24" />
             </div>
           </div>
           <div class="kpi-card">
@@ -222,11 +154,7 @@
               <div class="kpi-label">今日提问</div>
             </div>
             <div class="kpi-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
+              <Info :size="24" />
             </div>
           </div>
         </div>
@@ -238,10 +166,7 @@
           <h2 class="section-title">课程管理</h2>
           <div class="section-actions">
             <button class="add-course-button">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+              <Plus :size="16" />
               <span>添加课程</span>
             </button>
           </div>
@@ -271,24 +196,13 @@
                 </td>
                 <td class="course-actions">
                   <button class="action-button" aria-label="查看课程">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
-                      <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
+                    <Eye :size="16" />
                   </button>
                   <button class="action-button" aria-label="编辑课程">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
+                    <Pencil :size="16" />
                   </button>
                   <button class="action-button" aria-label="删除课程">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      <line x1="10" y1="11" x2="10" y2="17"></line>
-                      <line x1="14" y1="11" x2="14" y2="17"></line>
-                    </svg>
+                    <Trash2 :size="16" />
                   </button>
                 </td>
               </tr>
@@ -301,15 +215,11 @@
           </div>
           <div class="pagination-controls">
             <button class="pagination-button" :disabled="currentPage === 1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
+              <ChevronLeft :size="16" />
             </button>
             <button class="pagination-button active">1</button>
             <button class="pagination-button" disabled>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
+              <ChevronRight :size="16" />
             </button>
           </div>
         </div>
@@ -337,6 +247,26 @@ import { ref, computed } from 'vue';
 import { useThemeStore } from '@/stores/theme';
 import { useNotificationStore } from '@/stores/notification';
 import { useUserStore } from '@/stores/user';
+import {
+  BarChart3,
+  BookOpen,
+  Video,
+  FileText,
+  TrendingUp,
+  TrendingDown,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Sun,
+  Moon,
+  Bell,
+  Users,
+  Plus,
+  Eye,
+  Pencil,
+  Trash2,
+  Info
+} from 'lucide-vue-next';
 
 const themeStore = useThemeStore();
 const notificationStore = useNotificationStore();
@@ -1124,58 +1054,6 @@ const toggleNotifications = () => {
   .action-button svg {
     width: 14px;
     height: 14px;
-  }
-}
-
-/* Dark Theme Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-canvas: #0f172a;
-    --color-bg-card: #1e293b;
-    --color-bg-elevated: #334155;
-    --color-bg-hover: #334155;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #cbd5e1;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #334155;
-    --color-accent: #6366f1;
-    --color-accent-hover: #4f46e5;
-    --color-accent-subtle: rgba(99, 102, 241, 0.1);
-    --color-danger: #ef4444;
-    --color-danger-subtle: rgba(239, 68, 68, 0.1);
-    --color-success: #10b981;
-    --color-success-subtle: rgba(16, 185, 129, 0.1);
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-full: 9999px;
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* Light Theme */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-bg-canvas: #fdfdf8;
-    --color-bg-card: #ffffff;
-    --color-bg-elevated: #f8fafc;
-    --color-bg-hover: #f1f5f9;
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #64748b;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #e2e8f0;
-    --color-accent: #0075de;
-    --color-accent-hover: #0056b3;
-    --color-accent-subtle: rgba(0, 117, 222, 0.15);
-    --color-danger: #ef4444;
-    --color-danger-subtle: rgba(239, 68, 68, 0.1);
-    --color-success: #10b981;
-    --color-success-subtle: rgba(16, 185, 129, 0.1);
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-full: 9999px;
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

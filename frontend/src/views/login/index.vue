@@ -15,15 +15,15 @@
         <p class="slogan">AI 驱动的智能教学闭环系统</p>
         <div class="features">
           <div class="feature-item">
-            <span class="feature-icon">🎓</span>
+            <span class="feature-icon"><GraduationCap :size="24" /></span>
             <span class="feature-text">多模态视频解析</span>
           </div>
           <div class="feature-item">
-            <span class="feature-icon">🤖</span>
+            <span class="feature-icon"><Bot :size="24" /></span>
             <span class="feature-text">AI 智能问答助手</span>
           </div>
           <div class="feature-item">
-            <span class="feature-icon">📊</span>
+            <span class="feature-icon"><BarChart3 :size="24" /></span>
             <span class="feature-text">学情热力图分析</span>
           </div>
         </div>
@@ -46,10 +46,7 @@
             <label for="username" class="sr-only">用户名</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+                <User :size="20" />
               </span>
               <input
                 type="text"
@@ -69,10 +66,7 @@
             <label for="password" class="sr-only">密码</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
+                <Lock :size="20" />
               </span>
               <input
                 type="password"
@@ -89,16 +83,8 @@
                 @click="showPassword = !showPassword"
                 :aria-label="showPassword ? '隐藏密码' : '显示密码'"
               >
-                <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-                  <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-                  <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
-                  <line x1="2" x2="22" y1="2" y2="22"></line>
-                </svg>
+                <Eye v-if="!showPassword" :size="20" />
+                <EyeOff v-else :size="20" />
               </button>
             </div>
             <p v-if="errors.password" id="password-error" class="error-message">{{ errors.password }}</p>
@@ -109,10 +95,7 @@
             <label for="email" class="sr-only">邮箱</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
+                <Mail :size="20" />
               </span>
               <input
                 type="email"
@@ -212,6 +195,7 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { GraduationCap, Bot, BarChart3, User, Lock, Eye, EyeOff, Mail } from 'lucide-vue-next';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -809,50 +793,6 @@ const handleSubmit = async () => {
   
   .subtitle {
     font-size: 0.875rem;
-  }
-}
-
-/* Dark Theme Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-canvas: #0f172a;
-    --color-bg-card: #1e293b;
-    --color-bg-input: #334155;
-    --color-bg-hover: #334155;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #cbd5e1;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #334155;
-    --color-border-focus: #6366f1;
-    --color-accent: #6366f1;
-    --color-accent-hover: #4f46e5;
-    --color-accent-text: #ffffff;
-    --color-accent-subtle: rgba(99, 102, 241, 0.1);
-    --color-danger: #ef4444;
-    --radius-sm: 4px;
-    --radius-md: 8px;
-  }
-}
-
-/* Light Theme */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-bg-canvas: #ffffff;
-    --color-bg-card: #ffffff;
-    --color-bg-input: #f8fafc;
-    --color-bg-hover: #f1f5f9;
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #64748b;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #e2e8f0;
-    --color-border-focus: #0075de;
-    --color-accent: #0075de;
-    --color-accent-hover: #0056b3;
-    --color-accent-text: #ffffff;
-    --color-accent-subtle: rgba(0, 117, 222, 0.15);
-    --color-danger: #ef4444;
-    --radius-sm: 4px;
-    --radius-md: 8px;
   }
 }
 </style>
