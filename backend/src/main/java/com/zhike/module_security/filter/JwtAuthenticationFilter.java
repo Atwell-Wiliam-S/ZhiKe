@@ -18,12 +18,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * JWT认证过滤器
+ * 用于验证请求中的JWT Token并设置认证信息
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
 
+    /**
+     * 过滤请求，验证JWT Token
+     * @param request 请求对象
+     * @param response 响应对象
+     * @param filterChain 过滤器链
+     * @throws ServletException  Servlet异常
+     * @throws IOException  IO异常
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
