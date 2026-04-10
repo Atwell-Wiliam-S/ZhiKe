@@ -7,7 +7,7 @@
     <groupId>com.zhike</groupId>
     <artifactId>intelligent-teaching-system</artifactId>
     <version>1.0.0</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>智能教学闭环系统</name>
     <description>基于Spring Boot的智能教学闭环系统</description>
