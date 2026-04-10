@@ -3,9 +3,10 @@
     <!-- Left Sidebar -->
     <aside class="sidebar" :class="{ 'collapsed': isSidebarCollapsed }">
       <div class="sidebar-header">
-        <div class="logo" v-if="!isSidebarCollapsed">
-          <h1>ZhiKe</h1>
-          <div class="logo-dot"></div>
+        <div class="logo">
+          <GraduationCap :size="24" class="logo-icon" />
+          <h1 v-if="!isSidebarCollapsed">ZhiKe</h1>
+          <div class="logo-dot" v-if="!isSidebarCollapsed"></div>
         </div>
         <div class="role-badge" v-if="!isSidebarCollapsed">
           管理员
@@ -13,41 +14,35 @@
       </div>
       <nav class="sidebar-nav" aria-label="主导航">
         <ul class="nav-list">
-          <li class="nav-item">
-            <a href="/teacher" class="nav-link">
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/home' }">
+            <router-link to="/teacher/home" class="nav-link">
               <BarChart3 :size="20" />
               <span v-if="!isSidebarCollapsed">仪表盘</span>
-            </a>
+            </router-link>
           </li>
-          <li class="nav-item active">
-            <a href="/teacher/users" class="nav-link">
-              <Users :size="20" />
-              <span v-if="!isSidebarCollapsed">用户管理</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/teacher/courses" class="nav-link">
-              <BookOpen :size="20" />
-              <span v-if="!isSidebarCollapsed">课程管理</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/teacher/videos" class="nav-link">
-              <Video :size="20" />
-              <span v-if="!isSidebarCollapsed">视频管理</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/teacher/knowledge" class="nav-link">
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/knowledge' }">
+            <router-link to="/teacher/knowledge" class="nav-link">
               <FileText :size="20" />
               <span v-if="!isSidebarCollapsed">知识片段</span>
-            </a>
+            </router-link>
           </li>
-          <li class="nav-item">
-            <a href="/teacher/analytics" class="nav-link">
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/analytics' }">
+            <router-link to="/teacher/analytics" class="nav-link">
               <TrendingUp :size="20" />
               <span v-if="!isSidebarCollapsed">学情分析</span>
-            </a>
+            </router-link>
+          </li>
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/upload' }">
+            <router-link to="/teacher/upload" class="nav-link">
+              <Video :size="20" />
+              <span v-if="!isSidebarCollapsed">视频管理</span>
+            </router-link>
+          </li>
+          <li class="nav-item" :class="{ active: $route.path === '/admin/users' }">
+            <router-link to="/admin/users" class="nav-link">
+              <Users :size="20" />
+              <span v-if="!isSidebarCollapsed">用户管理</span>
+            </router-link>
           </li>
         </ul>
       </nav>
@@ -88,15 +83,31 @@
               <Bell :size="20" />
               <span v-if="unreadNotifications > 0" class="notification-badge" :aria-label="`${unreadNotifications} 条未读通知`">{{ unreadNotifications }}</span>
             </button>
-            <div class="nav-user-menu">
-              <div class="nav-user-avatar">
-                <span>{{ userNameInitial }}</span>
+            <div class="nav-user-menu" ref="userMenuRef">
+              <button class="nav-user-trigger" @click="isUserMenuOpen = !isUserMenuOpen" aria-label="用户菜单" aria-expanded="isUserMenuOpen">
+                <div class="nav-user-avatar">
+                  <span>{{ userNameInitial }}</span>
+                </div>
+                <span class="nav-user-name">{{ userName }}</span>
+                <ChevronDown :size="14" class="nav-user-arrow" :class="{ rotated: isUserMenuOpen }" />
+              </button>
+              <div v-if="isUserMenuOpen" class="nav-user-dropdown">
+                <div class="dropdown-user-info">
+                  <div class="dropdown-avatar">
+                    <span>{{ userNameInitial }}</span>
+                  </div>
+                  <div class="dropdown-details">
+                    <div class="dropdown-name">{{ userName }}</div>
+                    <div class="dropdown-email">{{ userEmail }}</div>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item dropdown-item-danger" @click="handleLogout">
+                  <LogOut :size="16" />
+                  <span>退出登录</span>
+                </button>
               </div>
-              <span class="nav-user-name">{{ userName }}</span>
             </div>
-            <button class="nav-button logout" @click="handleLogout" aria-label="退出登录">
-              <LogOut :size="20" />
-            </button>
           </div>
         </div>
       </header>
@@ -227,7 +238,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useThemeStore } from '@/stores/theme';
 import { useNotificationStore } from '@/stores/notification';
@@ -241,6 +252,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Sun,
   Moon,
   Bell,
@@ -249,7 +261,8 @@ import {
   Search,
   Pencil,
   Trash2,
-  LogOut
+  LogOut,
+  GraduationCap
 } from 'lucide-vue-next';
 
 const themeStore = useThemeStore();
@@ -260,6 +273,7 @@ const router = useRouter();
 // State
 const isSidebarCollapsed = ref(false);
 const isNotificationsOpen = ref(false);
+const isUserMenuOpen = ref(false);
 const currentPage = ref(1);
 const pageSize = ref(10);
 const selectedRole = ref('all');
@@ -347,6 +361,15 @@ const confirmDelete = () => {
   showDeleteModal.value = false;
   deleteUserId.value = null;
 };
+
+const userMenuRef = ref<HTMLElement | null>(null);
+const closeUserMenu = (e: MouseEvent) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(e.target as Node)) {
+    isUserMenuOpen.value = false;
+  }
+};
+onMounted(() => document.addEventListener('click', closeUserMenu));
+onBeforeUnmount(() => document.removeEventListener('click', closeUserMenu));
 </script>
 
 <style scoped>
@@ -385,6 +408,12 @@ const confirmDelete = () => {
 .logo {
   display: flex;
   align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  color: var(--color-accent, #F54E00);
+  flex-shrink: 0;
 }
 
 .logo h1 {
@@ -566,13 +595,23 @@ const confirmDelete = () => {
 }
 
 .nav-user-menu {
+  position: relative;
+}
+
+.nav-user-trigger {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 4px 12px 4px 4px;
   border-radius: var(--radius-full, 9999px);
-  background: var(--color-bg-elevated, #f8fafc);
-  cursor: default;
+  background: var(--color-bg-elevated, #eeefe9);
+  border: 1px solid var(--color-border, #bfc1b7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-user-trigger:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
 }
 
 .nav-user-avatar {
@@ -594,8 +633,99 @@ const confirmDelete = () => {
   color: var(--color-text-primary, #4d4f46);
 }
 
-.nav-button.logout:hover {
+.nav-user-arrow {
+  color: var(--color-text-tertiary, #9ea096);
+  transition: transform 0.2s ease;
+}
+
+.nav-user-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #bfc1b7);
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: var(--shadow-lg, 0 25px 50px -12px rgba(0,0,0,0.25));
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.dropdown-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-accent, #F54E00);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.dropdown-details {
+  overflow: hidden;
+}
+
+.dropdown-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #4d4f46);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-email {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary, #9ea096);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--color-border, #bfc1b7);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  color: var(--color-text-primary, #4d4f46);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+}
+
+.dropdown-item-danger {
   color: var(--color-danger, #dc2626);
+}
+
+.dropdown-item-danger:hover {
   background: var(--color-danger-bg, #fef2f2);
 }
 

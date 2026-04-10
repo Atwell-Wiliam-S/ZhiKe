@@ -1,146 +1,258 @@
 <template>
-  <div class="knowledge-graph">
-    <!-- Top Filter Bar -->
-    <div class="filter-bar">
-      <div class="container">
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb" aria-label="面包屑">
-          <ol class="breadcrumb-list">
-            <li class="breadcrumb-item">
-              <a href="#" class="breadcrumb-link">课程管理</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a href="#" class="breadcrumb-link">{{ selectedCourse }}</a>
-            </li>
-            <li class="breadcrumb-item active">
-              <span class="breadcrumb-link">知识片段</span>
-            </li>
-          </ol>
-        </nav>
-
-        <!-- Filters -->
-        <div class="filter-controls">
-          <div class="filter-group">
-            <select v-model="selectedCourse" class="filter-select">
-              <option value="机器学习基础">机器学习基础</option>
-              <option value="深度学习进阶">深度学习进阶</option>
-              <option value="计算机视觉">计算机视觉</option>
-            </select>
-            <select v-model="selectedVideo" class="filter-select">
-              <option value="第1讲：机器学习简介">第1讲：机器学习简介</option>
-              <option value="第2讲：监督学习">第2讲：监督学习</option>
-              <option value="第3讲：无监督学习">第3讲：无监督学习</option>
-            </select>
-            <div class="search-box">
-              <input
-                type="text"
-                v-model="searchQuery"
-                placeholder="搜索知识片段..."
-                class="search-input"
-              />
-              <Search :size="16" />
-            </div>
-          </div>
+  <div class="teacher-home">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" :class="{ 'collapsed': isSidebarCollapsed }">
+      <div class="sidebar-header">
+        <div class="logo">
+          <GraduationCap :size="24" class="logo-icon" />
+          <h1 v-if="!isSidebarCollapsed">ZhiKe</h1>
+          <div class="logo-dot" v-if="!isSidebarCollapsed"></div>
+        </div>
+        <div class="role-badge" v-if="!isSidebarCollapsed">
+          教师
         </div>
       </div>
-    </div>
+      <nav class="sidebar-nav" aria-label="主导航">
+        <ul class="nav-list">
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/home' }">
+            <router-link to="/teacher/home" class="nav-link">
+              <BarChart3 :size="20" />
+              <span v-if="!isSidebarCollapsed">仪表盘</span>
+            </router-link>
+          </li>
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/knowledge' }">
+            <router-link to="/teacher/knowledge" class="nav-link">
+              <FileText :size="20" />
+              <span v-if="!isSidebarCollapsed">知识片段</span>
+            </router-link>
+          </li>
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/analytics' }">
+            <router-link to="/teacher/analytics" class="nav-link">
+              <TrendingUp :size="20" />
+              <span v-if="!isSidebarCollapsed">学情分析</span>
+            </router-link>
+          </li>
+          <li class="nav-item" :class="{ active: $route.path === '/teacher/upload' }">
+            <router-link to="/teacher/upload" class="nav-link">
+              <Video :size="20" />
+              <span v-if="!isSidebarCollapsed">视频管理</span>
+            </router-link>
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <button
+          class="collapse-button"
+          @click="toggleSidebar"
+          :aria-label="isSidebarCollapsed ? '展开侧边栏' : '折叠侧边栏'"
+        >
+          <ChevronLeft v-if="!isSidebarCollapsed" :size="20" />
+          <ChevronRight v-else :size="20" />
+        </button>
+      </div>
+    </aside>
 
     <!-- Main Content -->
-    <div class="content-container">
-      <div class="container">
-        <!-- Left Column: Video Preview -->
-        <div class="left-column">
-          <div class="video-preview">
-            <div class="video-wrapper">
-              <video class="video-player" controls>
-                <source src="https://example.com/video.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+    <main class="main-content" :class="{ 'sidebar-collapsed': isSidebarCollapsed }">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="nav-container">
+          <div class="nav-left">
+            <h1 class="page-title">知识片段</h1>
+          </div>
+          <div class="nav-right">
+            <button
+              class="nav-button theme-toggle"
+              @click="toggleTheme"
+              aria-label="切换主题"
+            >
+              <Sun v-if="isDarkTheme" :size="20" />
+              <Moon v-else :size="20" />
+            </button>
+            <button
+              class="nav-button notification"
+              @click="toggleNotifications"
+              aria-label="通知"
+            >
+              <Bell :size="20" />
+              <span v-if="unreadNotifications > 0" class="notification-badge" :aria-label="`${unreadNotifications} 条未读通知`">{{ unreadNotifications }}</span>
+            </button>
+            <div class="nav-user-menu" ref="userMenuRef">
+              <button class="nav-user-trigger" @click="isUserMenuOpen = !isUserMenuOpen" aria-label="用户菜单" aria-expanded="isUserMenuOpen">
+                <div class="nav-user-avatar">
+                  <span>{{ userNameInitial }}</span>
+                </div>
+                <span class="nav-user-name">{{ userName }}</span>
+                <ChevronDown :size="14" class="nav-user-arrow" :class="{ rotated: isUserMenuOpen }" />
+              </button>
+              <div v-if="isUserMenuOpen" class="nav-user-dropdown">
+                <div class="dropdown-user-info">
+                  <div class="dropdown-avatar">
+                    <span>{{ userNameInitial }}</span>
+                  </div>
+                  <div class="dropdown-details">
+                    <div class="dropdown-name">{{ userName }}</div>
+                    <div class="dropdown-email">{{ userEmail }}</div>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item dropdown-item-danger" @click="handleLogout">
+                  <LogOut :size="16" />
+                  <span>退出登录</span>
+                </button>
+              </div>
             </div>
-            <div class="timeline-overlay">
-              <div
-                v-for="(segment, index) in segments"
-                :key="index"
-                class="timeline-segment"
-                :class="segment.status"
-                :style="{
-                  left: segment.startPosition + '%',
-                  width: (segment.endPosition - segment.startPosition) + '%'
-                }"
-                :aria-label="`${getStatusText(segment.status)}: ${segment.title}`"
-              ></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Specific Content -->
+      <div class="knowledge-graph">
+        <!-- Top Filter Bar -->
+        <div class="filter-bar">
+          <div class="container">
+            <!-- Filters -->
+            <div class="filter-controls">
+              <div class="filter-group">
+                <select v-model="selectedCourse" class="filter-select">
+                  <option value="机器学习基础">机器学习基础</option>
+                  <option value="深度学习进阶">深度学习进阶</option>
+                  <option value="计算机视觉">计算机视觉</option>
+                </select>
+                <select v-model="selectedVideo" class="filter-select">
+                  <option value="第1讲：机器学习简介">第1讲：机器学习简介</option>
+                  <option value="第2讲：监督学习">第2讲：监督学习</option>
+                  <option value="第3讲：无监督学习">第3讲：无监督学习</option>
+                </select>
+                <div class="search-box">
+                  <input
+                    type="text"
+                    v-model="searchQuery"
+                    placeholder="搜索知识片段..."
+                    class="search-input"
+                  />
+                  <Search :size="16" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Right Column: Segment List -->
-        <div class="right-column">
-          <div class="segment-list">
-            <div
-              v-for="(segment, index) in filteredSegments"
-              :key="index"
-              class="segment-card"
-            >
-              <div class="segment-header">
-                <h3 class="segment-title">{{ segment.title }}</h3>
-                <div class="segment-time">
-                  {{ formatTime(segment.startTime) }} - {{ formatTime(segment.endTime) }}
+        <!-- Main Content -->
+        <div class="content-container">
+          <div class="container">
+            <!-- Left Column: Video Preview -->
+            <div class="left-column">
+              <div class="video-preview">
+                <div class="video-wrapper">
+                  <video class="video-player" controls>
+                    <source src="https://example.com/video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                <div class="timeline-overlay">
+                  <div
+                    v-for="(segment, index) in segments"
+                    :key="index"
+                    class="timeline-segment"
+                    :class="segment.status"
+                    :style="{
+                      left: segment.startPosition + '%',
+                      width: (segment.endPosition - segment.startPosition) + '%'
+                    }"
+                    :aria-label="`${getStatusText(segment.status)}: ${segment.title}`"
+                  ></div>
                 </div>
               </div>
-              <p class="segment-content">{{ segment.content }}</p>
-              <div class="segment-tags">
-                <span
-                  v-for="(tag, tagIndex) in segment.tags"
-                  :key="tagIndex"
-                  class="tag"
-                >
-                  {{ tag }}
-                </span>
-              </div>
-              <div class="segment-actions">
-                <button class="action-button" @click="editSegment(index)" aria-label="编辑片段">
-                  <Pencil :size="16" />
-                </button>
-                <button class="action-button" @click="previewSegment(index)" aria-label="预览片段">
-                  <Eye :size="16" />
-                </button>
-                <button class="action-button delete" @click="deleteSegment(index)" aria-label="删除片段">
-                  <Trash2 :size="16" />
-                </button>
-              </div>
             </div>
-          </div>
 
-          <!-- Bottom Action Bar -->
-          <div class="action-bar">
-            <div class="batch-actions">
-              <label class="batch-checkbox">
-                <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
-                <span class="checkbox-label">全选</span>
-              </label>
-              <button class="batch-button" @click="batchDelete" :disabled="selectedSegments.length === 0">
-                <Trash2 :size="16" />
-                批量删除
-              </button>
-              <button class="batch-button" @click="batchConfirm" :disabled="selectedSegments.length === 0">
-                <Check :size="16" />
-                批量确认
-              </button>
+            <!-- Right Column: Segment List -->
+            <div class="right-column">
+              <div class="segment-list">
+                <div
+                  v-for="(segment, index) in filteredSegments"
+                  :key="index"
+                  class="segment-card"
+                >
+                  <div class="segment-header">
+                    <h3 class="segment-title">{{ segment.title }}</h3>
+                    <div class="segment-time">
+                      {{ formatTime(segment.startTime) }} - {{ formatTime(segment.endTime) }}
+                    </div>
+                  </div>
+                  <p class="segment-content">{{ segment.content }}</p>
+                  <div class="segment-tags">
+                    <span
+                      v-for="(tag, tagIndex) in segment.tags"
+                      :key="tagIndex"
+                      class="tag"
+                    >
+                      {{ tag }}
+                    </span>
+                  </div>
+                  <div class="segment-actions">
+                    <button class="action-button" @click="editSegment(index)" aria-label="编辑片段">
+                      <Pencil :size="16" />
+                    </button>
+                    <button class="action-button" @click="previewSegment(index)" aria-label="预览片段">
+                      <Eye :size="16" />
+                    </button>
+                    <button class="action-button delete" @click="deleteSegment(index)" aria-label="删除片段">
+                      <Trash2 :size="16" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Action Bar -->
+              <div class="action-bar">
+                <div class="batch-actions">
+                  <label class="batch-checkbox">
+                    <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
+                    <span class="checkbox-label">全选</span>
+                  </label>
+                  <button class="batch-button" @click="batchDelete" :disabled="selectedSegments.length === 0">
+                    <Trash2 :size="16" />
+                    批量删除
+                  </button>
+                  <button class="batch-button" @click="batchConfirm" :disabled="selectedSegments.length === 0">
+                    <Check :size="16" />
+                    批量确认
+                  </button>
+                </div>
+                <button class="add-segment-button" @click="addSegment">
+                  <Plus :size="16" />
+                  添加片段
+                </button>
+              </div>
             </div>
-            <button class="add-segment-button" @click="addSegment">
-              <Plus :size="16" />
-              添加片段
-            </button>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
+import { useThemeStore } from '@/stores/theme';
+import { useNotificationStore } from '@/stores/notification';
+import { useUserStore } from '@/stores/user';
 import {
+  BarChart3,
+  FileText,
+  TrendingUp,
+  Video,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Sun,
+  Moon,
+  Bell,
+  LogOut,
+  GraduationCap,
   Search,
   Pencil,
   Eye,
@@ -149,7 +261,54 @@ import {
   Plus
 } from 'lucide-vue-next';
 
-// State
+const themeStore = useThemeStore();
+const notificationStore = useNotificationStore();
+const userStore = useUserStore();
+const router = useRouter();
+
+// Layout state
+const isSidebarCollapsed = ref(false);
+const isNotificationsOpen = ref(false);
+const isUserMenuOpen = ref(false);
+
+// Layout computed properties
+const isDarkTheme = computed(() => themeStore.isDark);
+const unreadNotifications = computed(() => notificationStore.unreadCount);
+const userName = computed(() => userStore.userInfo?.username || '教师');
+const userEmail = computed(() => userStore.userInfo?.email || 'teacher@example.com');
+const userNameInitial = computed(() => {
+  const name = userName.value;
+  return name.charAt(0).toUpperCase();
+});
+
+// Layout methods
+const toggleSidebar = () => {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
+
+const toggleTheme = () => {
+  themeStore.toggleTheme();
+};
+
+const toggleNotifications = () => {
+  isNotificationsOpen.value = !isNotificationsOpen.value;
+};
+
+const handleLogout = () => {
+  userStore.logout()
+  router.push('/login')
+};
+
+const userMenuRef = ref<HTMLElement | null>(null);
+const closeUserMenu = (e: MouseEvent) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(e.target as Node)) {
+    isUserMenuOpen.value = false;
+  }
+};
+onMounted(() => document.addEventListener('click', closeUserMenu));
+onBeforeUnmount(() => document.removeEventListener('click', closeUserMenu));
+
+// Page state
 const selectedCourse = ref('机器学习基础');
 const selectedVideo = ref('第1讲：机器学习简介');
 const searchQuery = ref('');
@@ -208,7 +367,7 @@ const segments = ref([
 const filteredSegments = computed(() => {
   if (!searchQuery.value) return segments.value;
   const query = searchQuery.value.toLowerCase();
-  return segments.value.filter(segment => 
+  return segments.value.filter(segment =>
     segment.title.toLowerCase().includes(query) ||
     segment.content.toLowerCase().includes(query) ||
     segment.tags.some(tag => tag.toLowerCase().includes(query))
@@ -294,8 +453,364 @@ const batchConfirm = () => {
 </script>
 
 <style scoped>
-.knowledge-graph {
+/* Layout - Teacher Home */
+.teacher-home {
+  display: flex;
   min-height: 100vh;
+  background: var(--color-bg-canvas, #fdfdf8);
+  color: var(--color-text-primary, #0f172a);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: var(--color-bg-canvas, #fdfdf8);
+  border-right: 1px solid var(--color-border, #e2e8f0);
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+}
+
+.sidebar.collapsed {
+  width: 64px;
+}
+
+.sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  color: var(--color-accent, #6366f1);
+  flex-shrink: 0;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.logo-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-accent, #6366f1);
+  border-radius: 50%;
+  margin-left: 0.5rem;
+}
+
+.role-badge {
+  background: var(--color-accent-subtle, rgba(99, 102, 241, 0.1));
+  color: var(--color-accent, #6366f1);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full, 9999px);
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 0;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin-bottom: 4px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: var(--color-text-secondary, #64748b);
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.2s ease;
+  margin: 0 8px;
+  position: relative;
+}
+
+.nav-link:hover {
+  background: var(--color-bg-hover, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+}
+
+.nav-item.active .nav-link {
+  background: var(--color-accent-subtle, rgba(99, 102, 241, 0.1));
+  color: var(--color-text-primary, #0f172a);
+  border-left: 3px solid var(--color-accent, #6366f1);
+  margin-left: 0;
+  padding-left: 13px;
+}
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--color-border, #e2e8f0);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.collapse-button {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary, #64748b);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapse-button:hover {
+  background: var(--color-bg-hover, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 64px;
+}
+
+/* Top Navigation */
+.top-nav {
+  height: 64px;
+  background: var(--color-bg-card, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.nav-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary, #64748b);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-md, 8px);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-button:hover {
+  background: var(--color-bg-hover, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--color-danger, #ef4444);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-user-menu {
+  position: relative;
+}
+
+.nav-user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--color-bg-elevated, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-user-trigger:hover {
+  background: var(--color-bg-hover, #f1f5f9);
+}
+
+.nav-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-accent, #6366f1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.nav-user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.nav-user-arrow {
+  color: var(--color-text-tertiary, #94a3b8);
+  transition: transform 0.2s ease;
+}
+
+.nav-user-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: var(--shadow-lg, 0 12px 40px rgba(0,0,0,0.12));
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.dropdown-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-accent, #6366f1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.dropdown-details {
+  overflow: hidden;
+}
+
+.dropdown-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-email {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary, #94a3b8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--color-border, #e2e8f0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  color: var(--color-text-primary, #0f172a);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background: var(--color-bg-hover, #f1f5f9);
+}
+
+.dropdown-item-danger {
+  color: var(--color-danger, #ef4444);
+}
+
+.dropdown-item-danger:hover {
+  background: var(--color-danger-bg, rgba(239, 68, 68, 0.08));
+}
+
+/* Knowledge Graph Page Styles */
+.knowledge-graph {
+  min-height: calc(100vh - 64px);
   background: var(--color-bg-canvas, #fdfdf8);
   color: var(--color-text-primary, #0f172a);
 }
@@ -311,46 +826,6 @@ const batchConfirm = () => {
   max-width: 1440px;
   margin: 0 auto;
   padding: 0 24px;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-  margin-bottom: 16px;
-}
-
-.breadcrumb-list {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 8px;
-}
-
-.breadcrumb-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.breadcrumb-item:not(:last-child)::after {
-  content: '/';
-  color: var(--color-text-tertiary, #94a3b8);
-}
-
-.breadcrumb-link {
-  color: var(--color-text-tertiary, #94a3b8);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: color 0.2s ease;
-}
-
-.breadcrumb-link:hover {
-  color: var(--color-text-primary, #0f172a);
-}
-
-.breadcrumb-item.active .breadcrumb-link {
-  color: var(--color-text-primary, #0f172a);
-  font-weight: 600;
 }
 
 /* Filter Controls */
@@ -673,6 +1148,22 @@ const batchConfirm = () => {
 
 /* Responsive Design */
 @media (max-width: 1023px) {
+  .sidebar {
+    width: 64px;
+  }
+
+  .sidebar.collapsed {
+    width: 0;
+  }
+
+  .main-content {
+    margin-left: 64px;
+  }
+
+  .main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+
   .content-container .container {
     grid-template-columns: 35% 65%;
   }

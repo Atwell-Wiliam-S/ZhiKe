@@ -63,7 +63,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/teacher/upload',
     name: 'VideoUpload',
     component: () => import('@/views/teacher/VideoUpload.vue'),
-    meta: { requiresAuth: true, role: 'TEACHER', title: '视频上传' },
+    meta: { requiresAuth: true, role: 'TEACHER', title: '视频管理' },
   },
   {
     path: '/admin/users',
@@ -75,7 +75,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/settings',
     name: 'Settings',
     component: () => import('@/views/Settings.vue'),
-    meta: { requiresAuth: true, title: '个人设置' },
+    meta: { requiresAuth: true, role: 'ADMIN', title: '个人设置' },
   },
   {
     path: '/:pathMatch(.*)*',
