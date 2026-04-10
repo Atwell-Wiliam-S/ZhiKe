@@ -1,30 +1,37 @@
 package com.zhike.module_analytics.controller;
 
 import com.zhike.common.util.Result;
-import org.springframework.web.bind.annotation.*;
+import com.zhike.module_analytics.service.AnalyticsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/analytics")
 public class AnalyticsController {
 
-    @GetMapping("/heatmap/{videoId}")
-    public Result<?> getHeatmap(@PathVariable Long videoId) {
-        return Result.success("热力图数据");
+    @Autowired
+    private AnalyticsService analyticsService;
+
+    @GetMapping("/heatmap")
+    public Result<?> getHeatmap(@RequestParam Long courseId, @RequestParam Long videoId) {
+        return Result.success(analyticsService.getHeatmap(courseId, videoId));
     }
 
-    @GetMapping("/classOverview")
-    public Result<?> getClassOverview() {
-        return Result.success("班级概览");
+    @GetMapping("/class-overview")
+    public Result<?> getClassOverview(@RequestParam Long courseId) {
+        return Result.success(analyticsService.getClassOverview(courseId));
     }
 
-    @GetMapping("/studentProfile/{userId}")
-    public Result<?> getStudentProfile(@PathVariable Long userId) {
-        return Result.success("学生画像");
+    @GetMapping("/student-profile")
+    public Result<?> getStudentProfile(@RequestParam Long studentId) {
+        return Result.success(analyticsService.getStudentProfile(studentId));
     }
 
-    @GetMapping("/wordCloud/{videoId}")
-    public Result<?> getWordCloud(@PathVariable Long videoId) {
-        return Result.success("词云数据");
+    @GetMapping("/wordcloud")
+    public Result<?> getWordcloud(@RequestParam Long courseId, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
+        return Result.success(analyticsService.getWordcloud(courseId, startDate, endDate));
     }
-
 }

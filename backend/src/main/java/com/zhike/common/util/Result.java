@@ -1,27 +1,30 @@
 package com.zhike.common.util;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Result<T> {
 
     private int code;
     private String message;
     private T data;
-    private LocalDateTime timestamp;
+    private String timestamp;
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
 
     private Result(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().format(FORMATTER);
     }
 
     public static <T> Result<T> success() {
-        return new Result<>(200, "成功", null);
+        return new Result<>(200, "操作成功", null);
     }
 
     public static <T> Result<T> success(T data) {
-        return new Result<>(200, "成功", data);
+        return new Result<>(200, "操作成功", data);
     }
 
     public static <T> Result<T> error(int code, String message) {
@@ -56,11 +59,11 @@ public class Result<T> {
         this.data = data;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

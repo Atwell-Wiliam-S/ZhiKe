@@ -1,35 +1,42 @@
 package com.zhike.module_teacher.controller;
 
 import com.zhike.common.util.Result;
+import com.zhike.module_video.service.VideoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController {
 
-    @GetMapping("/courses")
-    public Result<?> getCourses() {
-        return Result.success("课程列表");
+    @Autowired
+    private VideoService videoService;
+
+    @GetMapping("/videos")
+    public Result<?> getVideos(@RequestParam Long courseId, @RequestParam Integer page, @RequestParam Integer pageSize) {
+        return Result.success(videoService.getTeacherVideos(courseId, page, pageSize));
     }
 
-    @PostMapping("/courses")
-    public Result<?> createCourse() {
-        return Result.success("课程创建成功");
+    @GetMapping("/fragments")
+    public Result<?> getFragments(@RequestParam Long videoId) {
+        return Result.success(videoService.getFragments(videoId));
     }
 
-    @PutMapping("/courses/{id}")
-    public Result<?> updateCourse(@PathVariable Long id) {
-        return Result.success("课程更新成功");
+    @PutMapping("/fragments/{id}")
+    public Result<?> updateFragment(@PathVariable Long id, @RequestBody Map<String, Object> request) {
+        String contentText = (String) request.get("contentText");
+        String summary = (String) request.get("summary");
+        String keywords = (String) request.get("keywords");
+
+        videoService.updateFragment(id, contentText, summary, keywords);
+        return Result.success();
     }
 
-    @DeleteMapping("/courses/{id}")
-    public Result<?> deleteCourse(@PathVariable Long id) {
-        return Result.success("课程删除成功");
+    @DeleteMapping("/fragments/{id}")
+    public Result<?> deleteFragment(@PathVariable Long id) {
+        videoService.deleteFragment(id);
+        return Result.success();
     }
-
-    @GetMapping("/analytics")
-    public Result<?> getAnalytics() {
-        return Result.success("学情分析");
-    }
-
 }

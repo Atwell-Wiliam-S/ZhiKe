@@ -6,21 +6,21 @@ public class PageResult<T> {
 
     private long total;
     private List<T> records;
-    private int current;
-    private int size;
-    private int pages;
+    private int page;
+    private int pageSize;
+    private int totalPages;
 
-    private PageResult(long total, List<T> records, int current, int size, int pages) {
+    private PageResult(long total, List<T> records, int page, int pageSize, int totalPages) {
         this.total = total;
         this.records = records;
-        this.current = current;
-        this.size = size;
-        this.pages = pages;
+        this.page = page;
+        this.pageSize = pageSize;
+        this.totalPages = totalPages;
     }
 
-    public static <T> PageResult<T> build(long total, List<T> records, int current, int size) {
-        int pages = (int) Math.ceil((double) total / size);
-        return new PageResult<>(total, records, current, size, pages);
+    public static <T> PageResult<T> build(long total, List<T> records, int page, int pageSize) {
+        int totalPages = (int) Math.ceil((double) total / pageSize);
+        return new PageResult<>(total, records, page, pageSize, totalPages);
     }
 
     public long getTotal() {
@@ -39,28 +39,28 @@ public class PageResult<T> {
         this.records = records;
     }
 
-    public int getCurrent() {
-        return current;
+    public int getPage() {
+        return page;
     }
 
-    public void setCurrent(int current) {
-        this.current = current;
+    public void setPage(int page) {
+        this.page = page;
     }
 
-    public int getSize() {
-        return size;
+    public int getPageSize() {
+        return pageSize;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
-    public int getPages() {
-        return pages;
+    public int getTotalPages() {
+        return totalPages;
     }
 
-    public void setPages(int pages) {
-        this.pages = pages;
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
     }
 
 }

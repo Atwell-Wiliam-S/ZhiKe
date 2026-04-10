@@ -2,8 +2,11 @@ package com.zhike.module_security.controller;
 
 import com.zhike.common.util.JwtUtil;
 import com.zhike.common.util.Result;
+import com.zhike.module_security.model.User;
+import com.zhike.module_security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,32 +23,94 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @PostMapping("/login")
     public Result<?> login(@RequestBody LoginRequest request) {
-        // 这里应该从数据库查询用户信息，验证用户名和密码
-        // 为了演示，这里使用硬编码的用户信息
-        if ("admin".equals(request.getUsername()) && "admin123".equals(request.getPassword())) {
-            String token = jwtUtil.generateToken("1", "ADMIN");
-            Map<String, Object> data = new HashMap<>();
-            data.put("token", token);
-            data.put("userInfo", Map.of(
-                    "id", 1,
-                    "username", "admin",
-                    "roleCode", "ADMIN"
-            ));
-            return Result.success(data);
+        User user = userService.findByUsername(request.getUsername());
+        if (user == null || !userService.validatePassword(request.getPassword(), user.getPassword())) {
+            return Result.error(401, "用户名或密码错误");
         }
-        return Result.error(401, "用户名或密码错误");
+
+        String token = jwtUtil.generateToken(user.getId().toString(), user.getRoleCode());
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", token);
+        data.put("userInfo", Map.of(
+                "userId", user.getId(),
+                "username", user.getUsername(),
+                "email", user.getEmail(),
+                "avatarUrl", user.getAvatarUrl(),
+                "roleCode", user.getRoleCode(),
+                "roleName", user.getRoleName()
+        ));
+        data.put("roles", Map.of(
+                "roleCode", user.getRoleCode(),
+                "roleName", user.getRoleName(),
+                "description", ""
+        ));
+
+        return Result.success(data);
     }
 
     @PostMapping("/register")
     public Result<?> register(@RequestBody RegisterRequest request) {
-        // 这里应该将用户信息保存到数据库
-        // 为了演示，这里直接返回成功
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        return Result.success("注册成功");
+        User existingUser = userService.findByUsername(request.getUsername());
+        if (existingUser != null) {
+            return Result.error(400, "用户名已存在");
+        }
+
+        User user = userService.register(
+                request.getUsername(),
+                request.getPassword(),
+                request.getEmail(),
+                request.getRoleCode(),
+                request.getRoleCode().equals("STUDENT") ? "学生" : "教师"
+        );
+
+        return Result.success(user.getId());
+    }
+
+    @PostMapping("/logout")
+    public Result<?> logout(Authentication authentication) {
+        // 这里可以实现Token失效逻辑，例如将Token加入黑名单
+        return Result.success();
+    }
+
+    @PostMapping("/refresh")
+    public Result<?> refresh(Authentication authentication) {
+        // 从认证信息中获取用户ID和角色
+        String userId = authentication.getName();
+        User user = userService.findById(Long.valueOf(userId));
+        if (user == null) {
+            return Result.error(401, "用户不存在");
+        }
+
+        String newToken = jwtUtil.generateToken(userId, user.getRoleCode());
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", newToken);
+        data.put("expiresIn", 86400); // 24小时
+
+        return Result.success(data);
+    }
+
+    @GetMapping("/info")
+    public Result<?> getInfo(Authentication authentication) {
+        String userId = authentication.getName();
+        User user = userService.findById(Long.valueOf(userId));
+        if (user == null) {
+            return Result.error(401, "用户不存在");
+        }
+
+        Map<String, Object> userInfo = Map.of(
+                "userId", user.getId(),
+                "username", user.getUsername(),
+                "email", user.getEmail(),
+                "avatarUrl", user.getAvatarUrl(),
+                "roleCode", user.getRoleCode(),
+                "roleName", user.getRoleName()
+        );
+
+        return Result.success(userInfo);
     }
 
     public static class LoginRequest {
@@ -72,6 +137,7 @@ public class AuthController {
     public static class RegisterRequest {
         private String username;
         private String password;
+        private String roleCode;
         private String email;
 
         public String getUsername() {
@@ -88,6 +154,14 @@ public class AuthController {
 
         public void setPassword(String password) {
             this.password = password;
+        }
+
+        public String getRoleCode() {
+            return roleCode;
+        }
+
+        public void setRoleCode(String roleCode) {
+            this.roleCode = roleCode;
         }
 
         public String getEmail() {
