@@ -20,6 +20,24 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, role: 'STUDENT', title: '视频学习' },
   },
   {
+    path: '/student/course/:courseId',
+    name: 'CourseDetail',
+    component: () => import('@/views/student/CourseDetail.vue'),
+    meta: { requiresAuth: true, role: 'STUDENT', title: '课程详情' },
+  },
+  {
+    path: '/student/qa/history',
+    name: 'QaHistory',
+    component: () => import('@/views/student/QaHistory.vue'),
+    meta: { requiresAuth: true, role: 'STUDENT', title: '问答历史' },
+  },
+  {
+    path: '/student/notes',
+    name: 'Notes',
+    component: () => import('@/views/student/Notes.vue'),
+    meta: { requiresAuth: true, role: 'STUDENT', title: '笔记列表' },
+  },
+  {
     path: '/teacher/home',
     name: 'TeacherHome',
     component: () => import('@/views/teacher/Home.vue'),
@@ -48,6 +66,12 @@ export const routes: RouteRecordRaw[] = [
     name: 'UserManagement',
     component: () => import('@/views/teacher/UserManagement.vue'),
     meta: { requiresAuth: true, role: 'TEACHER', title: '用户管理' },
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/views/Settings.vue'),
+    meta: { requiresAuth: true, title: '个人设置' },
   },
   {
     path: '/:pathMatch(.*)*',

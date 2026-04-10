@@ -1,1 +1,0 @@
-import{n as e}from"./pinia-CPRmteba.js";import{t}from"./useTheme-DnUZ_D7z.js";var n=e(`theme`,()=>{let{currentTheme:e,isDark:n,initTheme:r,toggleTheme:i}=t();return{currentTheme:e,isDark:n,initTheme:r,toggleTheme:i}});export{n as t};

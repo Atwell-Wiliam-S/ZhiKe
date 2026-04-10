@@ -285,7 +285,6 @@ const notificationStore = useNotificationStore();
 
 // State
 const isUserMenuOpen = ref(false);
-const isNotificationsOpen = ref(false);
 
 // Computed properties
 const isDarkTheme = computed(() => themeStore.isDark);
@@ -304,16 +303,10 @@ const toggleTheme = () => {
 
 const toggleUserMenu = () => {
   isUserMenuOpen.value = !isUserMenuOpen.value;
-  if (isUserMenuOpen.value) {
-    isNotificationsOpen.value = false;
-  }
 };
 
 const toggleNotifications = () => {
-  isNotificationsOpen.value = !isNotificationsOpen.value;
-  if (isNotificationsOpen.value) {
-    isUserMenuOpen.value = false;
-  }
+  notificationStore.openDrawer();
 };
 
 const logout = () => {
@@ -324,9 +317,8 @@ const logout = () => {
 // Close dropdowns when clicking outside
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement;
-  if (!target.closest('.user-menu') && !target.closest('.notification')) {
+  if (!target.closest('.user-menu')) {
     isUserMenuOpen.value = false;
-    isNotificationsOpen.value = false;
   }
 };
 
