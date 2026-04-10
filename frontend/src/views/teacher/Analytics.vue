@@ -60,15 +60,6 @@
           <ChevronLeft v-if="!isSidebarCollapsed" :size="20" />
           <ChevronRight v-else :size="20" />
         </button>
-        <div class="user-info" v-if="!isSidebarCollapsed">
-          <div class="user-avatar">
-            <span>{{ userNameInitial }}</span>
-          </div>
-          <div class="user-details">
-            <div class="user-name">{{ userName }}</div>
-            <div class="user-email">{{ userEmail }}</div>
-          </div>
-        </div>
       </div>
     </aside>
 
@@ -96,6 +87,15 @@
             >
               <Bell :size="20" />
               <span v-if="unreadNotifications > 0" class="notification-badge" :aria-label="`${unreadNotifications} 条未读通知`">{{ unreadNotifications }}</span>
+            </button>
+            <div class="nav-user-menu">
+              <div class="nav-user-avatar">
+                <span>{{ userNameInitial }}</span>
+              </div>
+              <span class="nav-user-name">{{ userName }}</span>
+            </div>
+            <button class="nav-button logout" @click="handleLogout" aria-label="退出登录">
+              <LogOut :size="20" />
             </button>
           </div>
         </div>
@@ -215,6 +215,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { useThemeStore } from '@/stores/theme';
 import { useNotificationStore } from '@/stores/notification';
 import { useUserStore } from '@/stores/user';
@@ -232,7 +233,8 @@ import {
   Moon,
   Bell,
   Download,
-  Info
+  Info,
+  LogOut
 } from 'lucide-vue-next';
 import * as echarts from 'echarts';
 import { mockHeatmap, mockClassOverview, mockStudentProfiles, mockWordCloud } from '@/mocks/data/analytics.data';
@@ -240,6 +242,7 @@ import { mockHeatmap, mockClassOverview, mockStudentProfiles, mockWordCloud } fr
 const themeStore = useThemeStore();
 const notificationStore = useNotificationStore();
 const userStore = useUserStore();
+const router = useRouter();
 
 // State
 const isSidebarCollapsed = ref(false);
@@ -286,6 +289,11 @@ const toggleTheme = () => {
 
 const toggleNotifications = () => {
   isNotificationsOpen.value = !isNotificationsOpen.value;
+};
+
+const handleLogout = () => {
+  userStore.logout()
+  router.push('/login')
 };
 
 const formatDuration = (seconds: number): string => {
@@ -730,49 +738,6 @@ watch(selectedCourse, (newCourse) => {
   color: var(--color-text-primary, #0f172a);
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--color-accent, #6366f1);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.user-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.user-name {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-text-primary, #0f172a);
-  margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.user-email {
-  font-size: 0.75rem;
-  color: var(--color-text-secondary, #64748b);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* Main Content */
 .main-content {
   flex: 1;
@@ -856,6 +821,40 @@ watch(selectedCourse, (newCourse) => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.nav-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--color-bg-elevated, #f8fafc);
+  cursor: default;
+}
+
+.nav-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-accent, #6366f1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.nav-user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.nav-button.logout:hover {
+  color: var(--color-danger, #ef4444);
+  background: var(--color-danger-bg, rgba(239, 68, 68, 0.1));
 }
 
 /* Analytics Section */
