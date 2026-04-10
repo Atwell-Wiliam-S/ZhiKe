@@ -28,7 +28,8 @@
   },
   "msw": {
     "workerDirectory": [
-      "public"
+      "public",
+      "mocks/browser"
     ]
   }
 }
