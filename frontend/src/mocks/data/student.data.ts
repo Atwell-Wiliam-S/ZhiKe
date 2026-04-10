@@ -27,11 +27,44 @@ export const mockPlayInfo: (videoId: number) => PlayInfoDTO = (videoId) => {
   }
 }
 
+const noteContents = [
+  '导数的定义是函数增量与自变量增量之比在增量趋于零时的极限。关键要理解 Δy/Δx 的几何意义——割线斜率趋近于切线斜率。',
+  '链式法则：若 y = f(g(x))，则 dy/dx = f\'(g(x)) · g\'(x)。外层求导乘内层求导，这个口诀很实用。',
+  '不定积分 ∫f(x)dx = F(x) + C，其中 F\'(x) = f(x)。注意常数 C 不能漏掉，因为导数会消去它。',
+  '矩阵乘法不满足交换律 AB ≠ BA，但满足结合律 (AB)C = A(BC)。计算时要注意行列对应关系。',
+  'Python 中列表推导式 [x**2 for x in range(10)] 比等价的 for 循环更简洁，且通常性能更好。',
+  '二分查找的前提是数组有序。时间复杂度 O(log n)，每次排除一半的元素。',
+  '特征值 λ 满足 det(A - λI) = 0，特征向量是满足 Ax = λx 的非零向量 x。',
+  '快速排序平均时间复杂度 O(n log n)，最坏 O(n²)。选择好的 pivot 可以避免最坏情况。',
+  '梯度下降的步长（学习率）太大容易震荡，太小收敛太慢。可以用学习率衰减策略。',
+  '拉格朗日乘数法用于求解约束优化问题，将约束条件引入目标函数构造拉格朗日函数。',
+  '卷积神经网络中卷积核的感受野决定了每个输出神经元"看到"的输入区域大小。',
+  '贝叶斯定理 P(A|B) = P(B|A)P(A)/P(B)，在机器学习中广泛用于分类和参数估计。',
+]
+
+const videoMap: Record<number, string> = {
+  1: '函数与极限',
+  2: '导数与微分',
+  3: '积分入门',
+  4: '矩阵与行列式',
+  5: '线性方程组',
+  6: 'Python基础语法',
+  7: '控制流与函数',
+  8: '排序算法',
+  9: '特征值分解',
+  10: '梯度下降',
+}
+
 export const mockNotes: NoteDTO[] = Array.from({ length: 12 }, (_, i) => ({
   id: i + 1,
-  videoId: (i % 3) + 1,
-  timestamp: 120 * (i % 5),
-  content: `这是一条关于视频${(i % 3) + 1}的笔记，记录了在${120 * (i % 5)}秒处的重要知识点...`,
-  isPublic: i % 2 === 0,
-  createdAt: new Date(Date.now() - i * 3600_000).toISOString(),
+  videoId: (i % 5) + 1,
+  timestamp: 60 + i * 120,
+  content: noteContents[i],
+  isPublic: i % 3 !== 0,
+  createdAt: new Date(Date.now() - i * 5400000).toISOString(),
 }))
+
+// 辅助方法：根据 videoId 获取视频标题
+export function getVideoTitle(videoId: number): string {
+  return videoMap[videoId] || '未知视频'
+}

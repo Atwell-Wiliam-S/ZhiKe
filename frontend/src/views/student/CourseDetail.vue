@@ -612,7 +612,8 @@ const handleTabChange = (tab: string) => {
   background: var(--color-bg-canvas);
   color: var(--color-text-primary);
   transition: all var(--duration-normal) var(--ease-default);
-  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 面包屑 */
@@ -1421,25 +1422,6 @@ const handleTabChange = (tab: string) => {
   align-self: start;
   max-height: calc(100vh - 4rem);
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) var(--color-bg-canvas);
-}
-
-.content-right::-webkit-scrollbar {
-  width: 6px;
-}
-
-.content-right::-webkit-scrollbar-track {
-  background: var(--color-bg-canvas);
-}
-
-.content-right::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: var(--radius-full);
-}
-
-.content-right::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
 }
 
 .sidebar-card {

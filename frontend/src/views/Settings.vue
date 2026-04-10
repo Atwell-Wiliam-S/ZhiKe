@@ -300,17 +300,17 @@ selectedTheme.value = themeStore.currentTheme
 .settings-page {
   min-height: 100vh;
   background-color: var(--color-bg-canvas);
-  padding-top: 76px;
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .settings-container {
-  max-width: 960px;
+  max-width: 1400px;
   margin: 0 auto;
   display: flex;
   gap: 24px;
+  padding: 20px 24px;
+  width: 100%;
 }
 
 /* 左侧导航 */

@@ -154,13 +154,16 @@ const userName = computed(() => userStore.userInfo?.username || '学生');
   min-height: 100vh;
   background: var(--color-bg-canvas, #f8fafc);
   color: var(--color-text-primary, #0f172a);
+  display: flex;
+  flex-direction: column;
 }
 
 /* Main Content */
 .main-content {
-  max-width: var(--container-2xl, 1280px);
+  max-width: var(--container-2xl);
   margin: 0 auto;
   padding: 0 24px;
+  width: 100%;
 }
 
 /* Hero Section */

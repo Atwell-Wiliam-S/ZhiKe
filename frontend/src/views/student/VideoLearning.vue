@@ -485,18 +485,18 @@ onUnmounted(() => {
   min-height: 100vh;
   background: var(--color-bg-canvas, #f8fafc);
   color: var(--color-text-primary, #0f172a);
-  padding-top: 76px;
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .content-container {
   display: grid;
   grid-template-columns: 70% 30%;
   gap: 24px;
-  max-width: 1440px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 16px 24px 24px;
+  width: 100%;
 }
 
 /* Left Column */
