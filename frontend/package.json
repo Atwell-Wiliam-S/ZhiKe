@@ -31,5 +31,6 @@
       "public",
       "mocks/browser"
     ]
-  }
+  },
+  "description": "智能教学系统前端应用"
 }
