@@ -1,0 +1,1162 @@
+<template>
+  <div class="user-management">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" :class="{ 'collapsed': isSidebarCollapsed }">
+      <div class="sidebar-header">
+        <div class="logo" v-if="!isSidebarCollapsed">
+          <h1>ZhiKe</h1>
+          <div class="logo-dot"></div>
+        </div>
+        <div class="role-badge" v-if="!isSidebarCollapsed">
+          管理员
+        </div>
+      </div>
+      <nav class="sidebar-nav" aria-label="主导航">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/teacher" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"></path>
+                <path d="M19 9H5"></path>
+                <path d="M16 14H5"></path>
+                <path d="M12 19H5"></path>
+              </svg>
+              <span v-if="!isSidebarCollapsed">仪表盘</span>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a href="/teacher/users" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span v-if="!isSidebarCollapsed">用户管理</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/teacher/courses" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+              </svg>
+              <span v-if="!isSidebarCollapsed">课程管理</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/teacher/videos" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+              </svg>
+              <span v-if="!isSidebarCollapsed">视频管理</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/teacher/knowledge" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span v-if="!isSidebarCollapsed">知识片段</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/teacher/analytics" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 20V10"></path>
+                <path d="M12 20V4"></path>
+                <path d="M6 20v-6"></path>
+              </svg>
+              <span v-if="!isSidebarCollapsed">学情分析</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <button 
+          class="collapse-button" 
+          @click="toggleSidebar"
+          :aria-label="isSidebarCollapsed ? '展开侧边栏' : '折叠侧边栏'"
+        >
+          <svg v-if="!isSidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <div class="user-info" v-if="!isSidebarCollapsed">
+          <div class="user-avatar">
+            <span>{{ userNameInitial }}</span>
+          </div>
+          <div class="user-details">
+            <div class="user-name">{{ userName }}</div>
+            <div class="user-email">{{ userEmail }}</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" :class="{ 'sidebar-collapsed': isSidebarCollapsed }">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="nav-container">
+          <div class="nav-left">
+            <h1 class="page-title">用户管理</h1>
+          </div>
+          <div class="nav-right">
+            <button
+              class="nav-button theme-toggle"
+              @click="toggleTheme"
+              aria-label="切换主题"
+            >
+              <svg v-if="isDarkTheme" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+            <button
+              class="nav-button notification"
+              @click="toggleNotifications"
+              aria-label="通知"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span v-if="unreadNotifications > 0" class="notification-badge" :aria-label="`${unreadNotifications} 条未读通知`">{{ unreadNotifications }}</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- User Management Content -->
+      <section class="user-management-content">
+        <!-- Top Action Bar -->
+        <div class="top-action-bar">
+          <h2 class="section-title">用户管理</h2>
+          <button class="add-user-button" aria-label="添加用户">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+            <span>添加用户</span>
+          </button>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="role-filter" role="tablist" aria-label="角色筛选">
+            <button 
+              v-for="role in roles" 
+              :key="role.value"
+              :class="['role-pill', { active: selectedRole === role.value }]"
+              :aria-selected="selectedRole === role.value"
+              @click="selectedRole = role.value"
+            >
+              {{ role.label }}
+            </button>
+          </div>
+          <div class="search-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              class="search-input" 
+              placeholder="搜索用户名或邮箱..."
+              v-model="searchQuery"
+            >
+          </div>
+          <div class="status-filter">
+            <span class="status-label">启用</span>
+            <label class="toggle-switch">
+              <input type="checkbox" v-model="statusFilter">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- User Table -->
+        <div class="user-table-container">
+          <table class="user-table" aria-label="用户列表">
+            <thead>
+              <tr>
+                <th>用户名</th>
+                <th>邮箱</th>
+                <th>角色</th>
+                <th>状态</th>
+                <th>注册时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in filteredUsers" :key="user.id" class="user-row">
+                <td class="user-name">{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  <span class="role-badge" :class="user.role.toLowerCase()">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td>
+                  <label class="toggle-switch">
+                    <input type="checkbox" v-model="user.enabled">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </td>
+                <td>{{ user.registeredAt }}</td>
+                <td class="user-actions">
+                  <button class="action-button" aria-label="编辑用户">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button class="action-button delete" @click="showDeleteConfirm(user.id)" aria-label="删除用户">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" aria-label="用户列表分页">
+          <div class="pagination-info">
+            显示 {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, filteredUsers.length) }} 条，共 {{ filteredUsers.length }} 条
+          </div>
+          <div class="pagination-controls">
+            <button class="pagination-button" :disabled="currentPage === 1" @click="currentPage--">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="pagination-button active">{{ currentPage }}</button>
+            <button class="pagination-button" :disabled="currentPage * pageSize >= filteredUsers.length" @click="currentPage++">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+            <div class="page-size-selector">
+              <span>每页</span>
+              <select v-model="pageSize">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+              <span>条</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteModal" class="modal-overlay" role="alertdialog" aria-labelledby="delete-title" aria-describedby="delete-description">
+      <div class="modal-content">
+        <h3 id="delete-title">确认删除</h3>
+        <p id="delete-description">确定要删除该用户吗？此操作不可撤销。</p>
+        <div class="modal-actions">
+          <button class="cancel-button" @click="showDeleteModal = false">取消</button>
+          <button class="delete-button" @click="confirmDelete">删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useThemeStore } from '@/stores/theme';
+import { useNotificationStore } from '@/stores/notification';
+import { useUserStore } from '@/stores/user';
+
+const themeStore = useThemeStore();
+const notificationStore = useNotificationStore();
+const userStore = useUserStore();
+
+// State
+const isSidebarCollapsed = ref(false);
+const isNotificationsOpen = ref(false);
+const currentPage = ref(1);
+const pageSize = ref(10);
+const selectedRole = ref('all');
+const searchQuery = ref('');
+const statusFilter = ref(true);
+const showDeleteModal = ref(false);
+const deleteUserId = ref<number | null>(null);
+
+// Computed properties
+const isDarkTheme = computed(() => themeStore.isDark);
+const unreadNotifications = computed(() => notificationStore.unreadCount);
+const userName = computed(() => userStore.userInfo?.username || '管理员');
+const userEmail = computed(() => userStore.userInfo?.email || 'admin@example.com');
+const userNameInitial = computed(() => {
+  const name = userName.value;
+  return name.charAt(0).toUpperCase();
+});
+
+// Roles
+const roles = [
+  { value: 'all', label: '全部' },
+  { value: 'STUDENT', label: '学生' },
+  { value: 'TEACHER', label: '教师' },
+  { value: 'ADMIN', label: '管理员' }
+];
+
+// Mock data
+const users = ref([
+  { id: 1, username: '张三', email: 'zhangsan@example.com', role: 'STUDENT', enabled: true, registeredAt: '2024-01-15 10:30' },
+  { id: 2, username: '李四', email: 'lisi@example.com', role: 'TEACHER', enabled: true, registeredAt: '2024-01-10 09:15' },
+  { id: 3, username: '王五', email: 'wangwu@example.com', role: 'STUDENT', enabled: false, registeredAt: '2024-01-05 14:20' },
+  { id: 4, username: '赵六', email: 'zhaoliu@example.com', role: 'ADMIN', enabled: true, registeredAt: '2024-01-01 08:00' },
+  { id: 5, username: '钱七', email: 'qianqi@example.com', role: 'STUDENT', enabled: true, registeredAt: '2023-12-25 16:45' },
+  { id: 6, username: '孙八', email: 'sunba@example.com', role: 'TEACHER', enabled: true, registeredAt: '2023-12-20 11:30' },
+  { id: 7, username: '周九', email: 'zhoujiu@example.com', role: 'STUDENT', enabled: true, registeredAt: '2023-12-15 13:15' },
+  { id: 8, username: '吴十', email: 'wushi@example.com', role: 'STUDENT', enabled: false, registeredAt: '2023-12-10 15:50' },
+  { id: 9, username: '郑一', email: 'zhengyi@example.com', role: 'TEACHER', enabled: true, registeredAt: '2023-12-05 10:20' },
+  { id: 10, username: '王二', email: 'wanger@example.com', role: 'STUDENT', enabled: true, registeredAt: '2023-12-01 09:45' },
+  { id: 11, username: '刘三', email: 'liusan@example.com', role: 'STUDENT', enabled: true, registeredAt: '2023-11-25 14:30' },
+  { id: 12, username: '陈四', email: 'chensi@example.com', role: 'STUDENT', enabled: true, registeredAt: '2023-11-20 11:15' }
+]);
+
+// Filtered users
+const filteredUsers = computed(() => {
+  return users.value.filter(user => {
+    const roleMatch = selectedRole.value === 'all' || user.role === selectedRole.value;
+    const searchMatch = !searchQuery.value || 
+      user.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.value.toLowerCase());
+    const statusMatch = !statusFilter.value || user.enabled;
+    return roleMatch && searchMatch && statusMatch;
+  });
+});
+
+// Methods
+const toggleSidebar = () => {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
+
+const toggleTheme = () => {
+  themeStore.toggleTheme();
+};
+
+const toggleNotifications = () => {
+  isNotificationsOpen.value = !isNotificationsOpen.value;
+};
+
+const showDeleteConfirm = (userId: number) => {
+  deleteUserId.value = userId;
+  showDeleteModal.value = true;
+};
+
+const confirmDelete = () => {
+  if (deleteUserId.value) {
+    const index = users.value.findIndex(user => user.id === deleteUserId.value);
+    if (index !== -1) {
+      users.value.splice(index, 1);
+    }
+  }
+  showDeleteModal.value = false;
+  deleteUserId.value = null;
+};
+</script>
+
+<style scoped>
+.user-management {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-bg-canvas, #fdfdf8);
+  color: var(--color-text-primary, #4d4f46);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: var(--color-bg-canvas, #fdfdf8);
+  border-right: 1px solid var(--color-border, #bfc1b7);
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+}
+
+.sidebar.collapsed {
+  width: 64px;
+}
+
+.sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border, #bfc1b7);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-primary, #4d4f46);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.logo-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-accent, #F54E00);
+  border-radius: 50%;
+  margin-left: 0.5rem;
+}
+
+.role-badge {
+  background: var(--color-accent-subtle, rgba(245, 78, 0, 0.08));
+  color: var(--color-accent, #F54E00);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full, 9999px);
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 0;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin-bottom: 4px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: var(--color-text-secondary, #65675e);
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.2s ease;
+  margin: 0 8px;
+  position: relative;
+}
+
+.nav-link:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+  color: var(--color-text-primary, #4d4f46);
+}
+
+.nav-item.active .nav-link {
+  background: var(--color-accent-subtle, rgba(245, 78, 0, 0.08));
+  color: var(--color-text-primary, #4d4f46);
+  border-left: 3px solid var(--color-accent, #F54E00);
+  margin-left: 0;
+  padding-left: 13px;
+}
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--color-border, #bfc1b7);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.collapse-button {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary, #65675e);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapse-button:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+  color: var(--color-text-primary, #4d4f46);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-accent, #F54E00);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #4d4f46);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #65675e);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 64px;
+}
+
+/* Top Navigation */
+.top-nav {
+  height: 64px;
+  background: var(--color-bg-card, #ffffff);
+  border-bottom: 1px solid var(--color-border, #bfc1b7);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.nav-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text-primary, #4d4f46);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary, #65675e);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-button:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+  color: var(--color-text-primary, #4d4f46);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--color-danger, #dc2626);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* User Management Content */
+.user-management-content {
+  padding: 24px;
+  background: var(--color-bg-canvas, #fdfdf8);
+}
+
+/* Top Action Bar */
+.top-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border, #bfc1b7);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-primary, #4d4f46);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.add-user-button {
+  background: var(--color-cta-bg, #1e1f23);
+  color: var(--color-cta-text, #ffffff);
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.add-user-button:hover {
+  background: #333438;
+  transform: translateY(-1px);
+}
+
+/* Filter Bar */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--color-bg-elevated, #eeefe9);
+  padding: 16px;
+  border-radius: var(--radius-sm, 4px);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.role-filter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.role-pill {
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-secondary, #65675e);
+  border: 1px solid var(--color-border, #bfc1b7);
+  border-radius: var(--radius-full, 9999px);
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.role-pill:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+  color: var(--color-text-primary, #4d4f46);
+}
+
+.role-pill.active {
+  background: var(--color-accent, #F54E00);
+  color: white;
+  border-color: var(--color-accent, #F54E00);
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary, #9ea096);
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--color-border, #bfc1b7);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-primary, #4d4f46);
+  font-size: 0.875rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-border-focus, #4d4f46);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle, rgba(245, 78, 0, 0.08));
+}
+
+.status-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #65675e);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-border, #bfc1b7);
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--color-accent, #F54E00);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+/* User Table */
+.user-table-container {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #bfc1b7);
+  border-radius: var(--radius-sm, 4px);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.user-table th,
+.user-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #bfc1b7);
+}
+
+.user-table th {
+  background: var(--color-bg-elevated, #eeefe9);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #65675e);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.user-row {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.user-row:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+}
+
+.user-row:hover .user-name {
+  color: var(--color-accent, #F54E00);
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--color-text-primary, #4d4f46);
+  transition: all 0.2s ease;
+}
+
+.role-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-full, 9999px);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.role-badge.student {
+  background: var(--color-info-bg, #eff6ff);
+  color: var(--color-info, #2563eb);
+}
+
+.role-badge.teacher {
+  background: var(--color-success-bg, #f0fdf4);
+  color: var(--color-success, #16a34a);
+}
+
+.role-badge.admin {
+  background: var(--color-warning-bg, #fffbeb);
+  color: var(--color-warning, #d97706);
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary, #9ea096);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+  color: var(--color-text-primary, #4d4f46);
+}
+
+.action-button.delete:hover {
+  color: var(--color-danger, #dc2626);
+  background: var(--color-danger-bg, #fef2f2);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #bfc1b7);
+  border-radius: var(--radius-sm, 4px);
+  padding: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagination-info {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #65675e);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination-button {
+  background: none;
+  border: 1px solid var(--color-border, #bfc1b7);
+  color: var(--color-text-secondary, #65675e);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+  color: var(--color-text-primary, #4d4f46);
+}
+
+.pagination-button.active {
+  background: var(--color-accent, #F54E00);
+  color: white;
+  border-color: var(--color-accent, #F54E00);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #65675e);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.page-size-selector select {
+  border: 1px solid var(--color-border, #bfc1b7);
+  border-radius: var(--radius-sm, 4px);
+  padding: 4px 8px;
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-primary, #4d4f46);
+  font-size: 0.875rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-sm, 4px);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-lg, 0 25px 50px -12px rgba(0,0,0,0.25));
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--color-text-primary, #4d4f46);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.modal-content p {
+  color: var(--color-text-secondary, #65675e);
+  margin-bottom: 24px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid var(--color-border, #bfc1b7);
+  color: var(--color-text-secondary, #65675e);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm, 4px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.cancel-button:hover {
+  background: var(--color-bg-hover, rgba(0,0,0,0.03));
+  color: var(--color-text-primary, #4d4f46);
+}
+
+.delete-button {
+  background: var(--color-danger, #dc2626);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm, 4px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.delete-button:hover {
+  background: #b91c1c;
+}
+
+/* Responsive Design */
+@media (max-width: 1023px) {
+  .sidebar {
+    width: 64px;
+  }
+  
+  .sidebar.collapsed {
+    width: 0;
+  }
+  
+  .main-content {
+    margin-left: 64px;
+  }
+  
+  .main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .role-filter {
+    justify-content: center;
+  }
+  
+  .search-container {
+    width: 100%;
+  }
+  
+  .user-table {
+    font-size: 0.875rem;
+  }
+  
+  .user-table th,
+  .user-table td {
+    padding: 10px 12px;
+  }
+  
+  .top-action-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .add-user-button {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 767px) {
+  .user-management-content {
+    padding: 16px;
+  }
+  
+  .filter-bar {
+    padding: 12px;
+  }
+  
+  .user-table-container {
+    overflow-x: auto;
+  }
+  
+  .user-table {
+    min-width: 600px;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .pagination-controls {
+    align-self: flex-end;
+  }
+  
+  .add-user-button {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+</style>

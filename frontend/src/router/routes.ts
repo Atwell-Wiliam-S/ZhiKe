@@ -26,6 +26,30 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, role: 'TEACHER', title: '仪表盘' },
   },
   {
+    path: '/teacher/knowledge-graph',
+    name: 'KnowledgeGraph',
+    component: () => import('@/views/teacher/KnowledgeGraph.vue'),
+    meta: { requiresAuth: true, role: 'TEACHER', title: '知识图谱管理' },
+  },
+  {
+    path: '/teacher/analytics',
+    name: 'Analytics',
+    component: () => import('@/views/teacher/Analytics.vue'),
+    meta: { requiresAuth: true, role: 'TEACHER', title: '学情分析' },
+  },
+  {
+    path: '/teacher/video-upload',
+    name: 'VideoUpload',
+    component: () => import('@/views/teacher/VideoUpload.vue'),
+    meta: { requiresAuth: true, role: 'TEACHER', title: '视频上传' },
+  },
+  {
+    path: '/teacher/users',
+    name: 'UserManagement',
+    component: () => import('@/views/teacher/UserManagement.vue'),
+    meta: { requiresAuth: true, role: 'TEACHER', title: '用户管理' },
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/NotFound.vue'),
