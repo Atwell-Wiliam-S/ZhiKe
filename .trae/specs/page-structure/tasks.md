@@ -1,0 +1,349 @@
+# 智能教学系统页面结构 - 实现计划
+
+## [ ] Task 1: 登录/注册页
+- **Priority**: P0
+- **Depends On**: None
+- **Description**:
+  - 创建登录/注册页组件
+  - 实现左右分栏布局（桌面端），移动端堆叠
+  - 实现左侧品牌区：深灰紫蓝到静藤蓝对角渐变背景，浮动抽象几何图形，Logo+标语+3个特性图标
+  - 实现右侧表单区：表单字段（用户名、密码、角色选择、邮箱），记住我+忘记密码，登录按钮，分割线，第三方登录预留，底部链接
+  - 实现交互状态：输入框聚焦效果，登录按钮悬停/按下效果，登录失败反馈，登录中状态，表单验证
+  - 实现无障碍功能：表单使用<form>标签，密码显示/隐藏按钮aria-label，错误提示关联aria-describedby，角色选择Radio Group用role="radiogroup"
+  - 实现亮色主题差异：右侧背景#ffffff，输入框背景#f8fafc，强调色#0075de
+  - 实现自适应主题
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-1.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-1.2: 视觉元素和样式符合设计要求
+  - `human-judgment` TR-1.3: 表单功能正常，验证有效
+  - `human-judgment` TR-1.4: 交互状态反馈正确
+  - `human-judgment` TR-1.5: 无障碍设计符合要求
+
+## [ ] Task 2: 学生首页
+- **Priority**: P0
+- **Depends On**: None
+- **Description**:
+  - 创建学生首页组件
+  - 实现单栏滚动布局，最大宽度 1280px 居中，padding 0 24px
+  - 实现Top Navigation：64px固定顶部，Logo+品牌色圆点，主题切换按钮，通知铃铛（Badge红点），角色徽章Pill，用户头像Dropdown
+  - 实现Hero区域：顶部48px，底部32px，问候语"Hi, {username}"，副标题"今天想学点什么？"
+  - 实现功能卡片网格：2×3 CSS Grid，gap 24px，卡片悬停效果（边框变为--color-accent，--shadow-glow光晕，translateY(-2px)）
+  - 实现卡片内容：我的课程、继续学习（带进度条）、AI助教、我的笔记（带数量Pill）、学习报告（带本周学习时长）、设置
+  - 实现最近活动：时间线样式，每条包含活动图标+描述+相对时间，空状态显示插图和文字
+  - 实现无障碍功能：功能卡片使用<ul role="list">+<li>，每张卡片为<a>或<button>包含aria-label，进度条使用role="progressbar"，通知铃铛Badge使用aria-label
+  - 实现亮色主题差异：背景#ffffff，卡片#ffffff，边框#e2e8f0，强调色#0075de
+  - 实现双主题支持
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-2.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-2.2: 视觉元素和样式符合设计要求
+  - `human-judgment` TR-2.3: 功能卡片和活动列表显示正常
+  - `human-judgment` TR-2.4: 主题切换功能正常
+  - `human-judgment` TR-2.5: 卡片悬停效果和交互反馈正确
+  - `human-judgment` TR-2.6: 无障碍设计符合要求
+
+## [ ] Task 3: 沉浸式视频学习页
+- **Priority**: P0
+- **Depends On**: None
+- **Description**:
+  - 创建视频学习页组件
+  - 实现两栏布局（左70% + 右30%），全宽背景（无最大容器限制）
+  - 实现视频播放器：16:9比例，自定义控件，快捷键支持（Space暂停/播放，←→快退/快进5s，↑↓音量，F全屏）
+  - 实现知识点时间轴：视频播放器正下方，水平时间轴，indigo圆点标记知识点位置，当前进度显示，脉冲动画
+  - 实现AI问答面板：容器背景--color-bg-card，标题栏（"AI助教"+在线状态指示灯+清空对话按钮），消息列表（用户消息右对齐，AI消息左对齐，引用标签可点击），输入栏（多行textarea，发送按钮）
+  - 实现知识大纲：右栏Sticky，手风琴样式，章节→知识点（带时间戳），当前播放项标记
+  - 实现我的笔记：时间倒序，每条笔记包含时间戳Pill+内容预览+编辑/删除操作
+  - 实现无障碍功能：视频播放器role="application"，时间轴标记role="slider"，AI消息列表role="log"+aria-live="polite"，引用标签aria-label
+  - 实现亮色主题差异：全宽背景#ffffff，卡片#ffffff，边框#e2e8f0，引用标签#0075de背景
+  - 实现双主题支持
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-3.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-3.2: 视频播放器功能正常，快捷键支持有效
+  - `human-judgment` TR-3.3: AI问答面板功能正常，消息显示和发送正确
+  - `human-judgment` TR-3.4: 知识大纲和笔记列表显示正常
+  - `human-judgment` TR-3.5: 知识点时间轴和脉冲动画效果正确
+  - `human-judgment` TR-3.6: 主题切换功能正常
+  - `human-judgment` TR-3.7: 无障碍设计符合要求
+
+## [ ] Task 4: 教师首页
+- **Priority**: P0
+- **Depends On**: None
+- **Description**:
+  - 创建教师首页组件
+  - 实现左侧固定侧边栏 + 右侧主内容区
+  - 实现左侧边栏：背景--color-bg-canvas (#fdfdf8)，Logo+教师角色标识Pill，导航项（仪表盘、课程管理、视频管理、知识片段、学情分析、系统设置），底部折叠按钮+用户信息
+  - 实现KPI卡片行：4列Grid，gap 16px，卡片显示总学生数、活跃课程、平均完成率（带环比趋势箭头）、今日提问
+  - 实现课程管理表格：表头（课程名称、教师、视频数、学生数、状态、操作），行悬停效果，操作按钮（查看、编辑、删除），分页
+  - 实现最近活动时间线：左侧2px竖线+8px圆点+时间+描述
+  - 实现无障碍功能：侧边栏导航使用<nav aria-label="主导航">+<ul>/<li>，当前页aria-current="page"，折叠按钮aria-label，表格使用语义化标签，分页使用<nav aria-label="分页">
+  - 实现浅色主题固定
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-4.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-4.2: 侧边栏导航功能正常，折叠/展开效果正确
+  - `human-judgment` TR-4.3: KPI卡片和表格显示正常
+  - `human-judgment` TR-4.4: 活动时间线显示正常
+  - `human-judgment` TR-4.5: 表格行悬停效果和操作按钮功能正确
+  - `human-judgment` TR-4.6: 无障碍设计符合要求
+
+## [ ] Task 5: 知识图谱管理页
+- **Priority**: P0
+- **Depends On**: None
+- **Description**:
+  - 创建知识图谱管理页组件
+  - 实现顶部筛选栏 + 左右分栏（左40%视频预览，右60%片段列表）
+  - 实现顶部筛选栏：面包屑导航，课程下拉+视频下拉+搜索框，--color-bg-elevated (#eeefe9)背景
+  - 实现左栏：视频预览（16:9比例，带缩略图），时间轴叠加（绿色已确认，琥珀色待审核，珊瑚色需修改），Sticky定位
+  - 实现右栏：片段卡片列表（标题、时间范围、内容预览、关键词Pill、操作按钮），卡片悬停效果
+  - 实现底部操作栏："添加片段"按钮，批量操作（全选Checkbox、批量删除、批量确认）
+  - 实现无障碍功能：面包屑使用<ol>有序列表+aria-label="面包屑"，时间轴色条使用aria-label描述各颜色含义，操作按钮aria-label
+  - 实现浅色主题固定
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-5.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-5.2: 视频预览和时间轴显示正常，时间轴颜色标记正确
+  - `human-judgment` TR-5.3: 片段卡片列表和操作按钮功能正常
+  - `human-judgment` TR-5.4: 批量操作功能有效
+  - `human-judgment` TR-5.5: 卡片悬停效果正确
+  - `human-judgment` TR-5.6: 无障碍设计符合要求
+
+## [ ] Task 6: 学情分析大屏
+- **Priority**: P0
+- **Depends On**: None
+- **Description**:
+  - 创建学情分析大屏组件
+  - 实现顶部操作栏 + 2×2 Grid图表区，padding 24px
+  - 实现顶部操作栏：左侧课程选择下拉+日期范围选择器，右侧导出按钮
+  - 实现左上（2/3）：难点热力图（ECharts水平热力图），X轴视频时间轴，Y轴学生密度，蓝色→黄色→红色渐变，脉冲圆点标记难点峰值
+  - 实现右上（1/3）：班级概览KPI（4个指标卡片），包含完成率（ECharts环形进度图）、活跃学生、平均观看时长、总提问数
+  - 实现左下（1/2）：高频困惑词云（ECharts词云图），高频词大字，低频词小字
+  - 实现右下（1/2）：学生排行榜（ECharts水平柱状图），Top 10学生，头像+姓名+学习时长
+  - 实现无障碍功能：图表容器使用role="img"+aria-label提供文字摘要，排行榜下方提供<table>格式的可访问数据表
+  - 实现浅色主题固定
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-6.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-6.2: 所有图表显示正常，交互有效
+  - `human-judgment` TR-6.3: KPI指标卡片显示完整
+  - `human-judgment` TR-6.4: 导出功能正常
+  - `human-judgment` TR-6.5: 热力图脉冲动画效果正确
+  - `human-judgment` TR-6.6: 无障碍设计符合要求
+
+## [ ] Task 7: 课程详情页
+- **Priority**: P1
+- **Depends On**: None
+- **Description**:
+  - 创建课程详情页组件
+  - 实现顶部面包屑 + Hero区 + Tab内容区 + 右侧边栏
+  - 实现Hero区：左侧课程封面图（16:9比例，--radius-lg圆角），右侧课程标题、教师信息、评分、统计、描述（3行截断+"展开全部"链接）、CTA按钮
+  - 实现Tab导航：课程概览 | 课程目录 | 学员评价，下划线指示器，激活态文字颜色变化
+  - 实现课程目录：手风琴列表，章节→视频（带时间戳，显示已完成/正在学习/未解锁状态）
+  - 实现右侧边栏：课程统计卡片（完成进度环形图），教师简介卡片，相关课程推荐
+  - 实现无障碍功能：面包屑<nav aria-label="面包屑"><ol>，Tab使用role="tablist"+role="tab"+role="tabpanel"+aria-selected，手风琴使用原生<details>/<summary>，视频状态图标使用aria-label
+  - 实现亮色主题差异：背景#ffffff，卡片#ffffff，边框#e2e8f0
+  - 实现双主题支持
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-7.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-7.2: Hero区信息显示完整，CTA按钮功能正常
+  - `human-judgment` TR-7.3: Tab导航和课程目录功能正常，下划线指示器动画正确
+  - `human-judgment` TR-7.4: 右侧边栏信息显示完整
+  - `human-judgment` TR-7.5: 主题切换功能正常
+  - `human-judgment` TR-7.6: 无障碍设计符合要求
+
+## [ ] Task 8: 视频上传页
+- **Priority**: P1
+- **Depends On**: None
+- **Description**:
+  - 创建视频上传页组件
+  - 实现单栏居中，最大宽度 800px，padding 32px 24px
+  - 实现上传区域：虚线--color-border边框，--radius-lg圆角，padding 48px，居中显示Upload图标+文字提示+文件选择链接+支持格式说明，拖拽悬停效果
+  - 实现上传进度：--color-accent填充进度条，状态文字显示，失败重试链接
+  - 实现视频信息表单：课程选择（Select下拉，必填），视频标题（Input，必填，max 100字符），视频描述（Textarea，可选，max 500字符，字数计数器），排序序号（InputNumber，可选），上传后显示视频缩略图预览
+  - 实现操作按钮：右对齐，"取消"按钮（Ghost样式），"保存并解析"按钮（Dark Primary #1e1f23样式，Sparkles图标+文字）
+  - 实现无障碍功能：拖拽区使用<input type="file">隐藏，点击触发，拖拽区role="button"+aria-label，进度条role="progressbar"，表单验证错误aria-describedby
+  - 实现浅色主题固定
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-8.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-8.2: 拖拽上传功能正常，进度显示准确，拖拽悬停效果正确
+  - `human-judgment` TR-8.3: 视频信息表单验证有效，字数计数器功能正常
+  - `human-judgment` TR-8.4: 视频缩略图预览显示正常
+  - `human-judgment` TR-8.5: 操作按钮功能正常
+  - `human-judgment` TR-8.6: 无障碍设计符合要求
+
+## [ ] Task 9: 用户管理页
+- **Priority**: P1
+- **Depends On**: None
+- **Description**:
+  - 创建用户管理页组件
+  - 实现顶部操作栏 + 筛选栏 + 数据表格 + 分页
+  - 实现顶部操作栏：左侧"用户管理"标题，右侧"添加用户"按钮（Dark Primary样式，UserPlus图标）
+  - 实现筛选栏：角色筛选（Pill徽章切换：全部/学生/教师/管理员），搜索框，状态筛选（启用/禁用Toggle开关）
+  - 实现数据表格：列（用户名、邮箱、角色（Pill徽章）、状态（Toggle开关）、注册时间、操作），行悬停效果，操作按钮（编辑、删除）
+  - 实现角色徽章颜色：学生--color-info-bg，教师--color-success-bg，管理员--color-warning-bg
+  - 实现移动端卡片模式：每个用户一张卡片，包含头像+用户名+角色Pill+状态+操作按钮
+  - 实现分页：底部居中，页码按钮+"每页10条"下拉+"共156条"文字，当前页--color-accent背景
+  - 实现无障碍功能：表格语义化<table>/<caption>，角色筛选使用role="tablist"+aria-selected，Toggle开关role="switch"+aria-checked，删除确认弹窗role="alertdialog"+aria-describedby
+  - 实现浅色主题固定
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-9.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-9.2: 筛选功能正常，表格显示完整
+  - `human-judgment` TR-9.3: 用户操作功能正常，删除确认弹窗正确
+  - `human-judgment` TR-9.4: 分页功能有效
+  - `human-judgment` TR-9.5: 表格行悬停效果和角色徽章颜色正确
+  - `human-judgment` TR-9.6: 无障碍设计符合要求
+
+## [ ] Task 10: 问答历史页
+- **Priority**: P2
+- **Depends On**: None
+- **Description**:
+  - 创建问答历史页组件
+  - 实现顶部筛选 + 问答卡片列表 + 分页
+  - 实现筛选栏：搜索输入框，时间筛选（Pill徽章切换：今天/本周/本月/全部），排序（Select下拉：最新优先/最早优先）
+  - 实现问答卡片：--color-bg-card背景，--color-border边框，--radius-md圆角，顶部问题文本+时间戳，中部AI回答预览（3行截断），底部引用来源数量Pill+Token消耗+模型版本标签，悬停效果
+  - 实现空状态：居中MessageSquare图标+"暂无问答记录"+"去视频学习页提问"按钮
+  - 实现无障碍功能：筛选Pill role="tablist"+aria-selected，卡片使用<article>语义标签，"查看详情"链接aria-label，空状态插图role="img" aria-label
+  - 实现亮色主题差异：背景#ffffff，卡片#ffffff，边框#e2e8f0，强调色#0075de，Pill背景rgba(0,117,222,0.1)
+  - 实现双主题支持
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-10.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-10.2: 筛选功能正常，问答卡片显示完整
+  - `human-judgment` TR-10.3: 空状态处理正确
+  - `human-judgment` TR-10.4: 分页功能有效
+  - `human-judgment` TR-10.5: 卡片悬停效果正确
+  - `human-judgment` TR-10.6: 主题切换功能正常
+  - `human-judgment` TR-10.7: 无障碍设计符合要求
+
+## [ ] Task 11: 个人设置页
+- **Priority**: P2
+- **Depends On**: None
+- **Description**:
+  - 创建个人设置页组件
+  - 实现左侧导航 + 右侧设置表单，最大宽度 960px 居中
+  - 实现左侧设置导航：--color-bg-card背景，--radius-md圆角，导航项（个人信息、主题偏好、安全设置、通知设置），激活态样式
+  - 实现个人信息：圆形头像（80px），"更换头像"按钮，表单字段（用户名、邮箱、手机号、个人简介），保存按钮
+  - 实现主题偏好（学生端）：Radio Group（暗色模式、亮色模式、跟随系统），小型实时预览卡片
+  - 实现安全设置：修改密码表单（旧密码、新密码、确认新密码），密码强度指示器（弱/中/强）
+  - 实现通知设置：Toggle开关列表（课程更新通知、作业提醒、系统公告、邮件通知汇总）
+  - 实现无障碍功能：设置导航使用<nav aria-label="设置导航">，表单字段<label>关联for属性，密码强度role="progressbar"，Toggle role="switch"+aria-checked
+  - 实现跟随角色主题
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-11.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-11.2: 左侧导航功能正常，激活态样式正确
+  - `human-judgment` TR-11.3: 个人信息表单功能正常，头像上传功能正确
+  - `human-judgment` TR-11.4: 主题偏好设置功能正常，实时预览卡片显示正确
+  - `human-judgment` TR-11.5: 安全设置和通知设置功能正常，密码强度指示器正确
+  - `human-judgment` TR-11.6: 无障碍设计符合要求
+
+## [ ] Task 12: 笔记列表页
+- **Priority**: P2
+- **Depends On**: None
+- **Description**:
+  - 创建笔记列表页组件
+  - 实现顶部筛选 + 笔记卡片瀑布流
+  - 实现筛选栏：课程筛选（Select下拉），视频筛选（Select下拉，联动课程），搜索输入框
+  - 实现笔记卡片：CSS Grid布局，--color-bg-card背景，--color-border边框，--radius-md圆角，顶部视频标题+时间戳Pill，中部笔记内容，底部创建时间+公开/私有Toggle+编辑/删除按钮，悬停效果
+  - 实现空状态：居中StickyNote图标+"暂无笔记"+"去视频学习页创建笔记"按钮
+  - 实现无障碍功能：笔记卡片使用<article>语义，时间戳Pill aria-label，公开/私有Toggle role="switch"+aria-checked，删除按钮二次确认role="alertdialog"
+  - 实现亮色主题差异：背景#ffffff，卡片#ffffff，边框#e2e8f0，时间戳Pill #0075de背景
+  - 实现双主题支持
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-12.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-12.2: 筛选功能正常，笔记卡片显示完整
+  - `human-judgment` TR-12.3: 笔记编辑和删除功能正常，删除确认弹窗正确
+  - `human-judgment` TR-12.4: 空状态处理正确
+  - `human-judgment` TR-12.5: 卡片悬停效果正确
+  - `human-judgment` TR-12.6: 主题切换功能正常
+  - `human-judgment` TR-12.7: 无障碍设计符合要求
+
+## [ ] Task 13: 通知中心
+- **Priority**: P2
+- **Depends On**: None
+- **Description**:
+  - 创建通知中心组件
+  - 实现右侧滑出Drawer面板，宽度400px（桌面端）/全宽（移动端）
+  - 实现面板头部：标题"通知"，"全部已读"按钮（Ghost样式），关闭按钮（X图标）
+  - 实现通知分类Tab：全部 | 系统 | 课程 | 互动，Pill徽章切换，未读计数Badge
+  - 实现通知列表：列表项padding 14px 16px，未读样式（左侧3px --color-accent边框+--color-accent-subtle行背景），已读样式，内容包含图标+标题+时间+描述
+  - 实现空状态：居中BellOff图标+"暂无通知"
+  - 实现无障碍功能：Drawer role="dialog"+aria-modal="true"+aria-label="通知中心"，打开时Trap Focus，Escape关闭，通知列表role="list"+aria-label，未读项aria-unread="true"
+  - 实现跟随角色主题
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-13.1: 面板布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-13.2: Tab切换功能正常，通知列表显示完整
+  - `human-judgment` TR-13.3: 已读/未读状态区分正确，全部已读功能有效
+  - `human-judgment` TR-13.4: 空状态处理正确
+  - `human-judgment` TR-13.5: 无障碍设计符合要求
+
+## [ ] Task 14: 404错误页
+- **Priority**: P3
+- **Depends On**: None
+- **Description**:
+  - 创建404错误页组件
+  - 实现全屏居中布局，最小高度100vh
+  - 实现背景：--color-bg-canvas
+  - 实现内容：大号404数字（system-ui 120px 800，--color-text-tertiary，opacity 0.3），标题"页面未找到"，描述"抱歉，您访问的页面不存在或已被移除。"，操作按钮（"返回首页"按钮，"返回上页"链接）
+  - 实现交互：按钮hover效果，自动10秒后倒计时跳转首页
+  - 实现无障碍功能：role="alert"标记错误状态，主内容区域role="main"，按钮aria-label，倒计时使用aria-live="polite"
+  - 实现自适应主题
+- **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-5
+- **Test Requirements**:
+  - `human-judgment` TR-14.1: 页面布局符合设计要求，响应式适配正确
+  - `human-judgment` TR-14.2: 错误信息显示完整，操作按钮功能正常
+  - `human-judgment` TR-14.3: 自动倒计时跳转功能有效
+  - `human-judgment` TR-14.4: 无障碍设计符合要求
+
+## [ ] Task 15: 导航关系和路由配置
+- **Priority**: P0
+- **Depends On**: Tasks 1-14
+- **Description**:
+  - 配置路由表：
+    - `/login` - 登录/注册页（公开）
+    - `/student/home` - 学生首页（STUDENT）
+    - `/student/learn/:videoId` - 视频学习页（STUDENT）
+    - `/student/course/:courseId` - 课程详情页（STUDENT）
+    - `/student/qa/history` - 问答历史页（STUDENT）
+    - `/student/notes` - 笔记列表页（STUDENT）
+    - `/teacher/home` - 教师首页（TEACHER）
+    - `/teacher/knowledge` - 知识图谱管理页（TEACHER）
+    - `/teacher/upload` - 视频上传页（TEACHER）
+    - `/teacher/analytics` - 学情分析大屏（TEACHER/ADMIN）
+    - `/admin/users` - 用户管理页（ADMIN）
+    - `/settings` - 个人设置页（ALL）
+    - `*` - 404错误页（公开）
+  - 实现导航守卫和权限控制
+  - 完善页面间的导航关系：
+    - 登录/注册页 → 学生首页/教师首页/管理员首页（根据角色）
+    - 学生首页 → 课程详情页 → 视频学习页
+    - 学生首页 → AI助教、我的笔记、学习报告、设置
+    - 教师首页 → 课程管理、视频管理、知识图谱管理、学情分析
+    - 教师首页 → 视频上传页
+    - 管理员首页 → 用户管理页
+    - 所有角色 → 个人设置页、通知中心
+    - 任意无效路由 → 404错误页
+- **Acceptance Criteria Addressed**: AC-4
+- **Test Requirements**:
+  - `human-judgment` TR-15.1: 路由配置正确，页面访问正常
+  - `human-judgment` TR-15.2: 导航守卫和权限控制有效
+  - `human-judgment` TR-15.3: 页面间导航关系正确
+
+## [ ] Task 16: 样式和响应式优化
+- **Priority**: P2
+- **Depends On**: Tasks 1-14
+- **Description**:
+  - 优化页面样式，确保符合设计系统规格
+  - 完善响应式布局，确保在不同设备上的显示效果
+  - 优化用户体验和交互效果
+- **Acceptance Criteria Addressed**: AC-1, AC-2
+- **Test Requirements**:
+  - `human-judgment` TR-16.1: 页面样式符合设计要求
+  - `human-judgment` TR-16.2: 响应式适配在不同设备上显示正常
+  - `human-judgment` TR-16.3: 交互效果流畅，用户体验良好
