@@ -6,12 +6,17 @@ import './assets/styles/variables.css'
 import './assets/styles/index.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import { vuetify } from './plugins/vuetify'
+import TDesign from 'tdesign-vue-next'
+import 'tdesign-vue-next/es/style/index.css'
 
 async function bootstrap() {
   const app = createApp(App)
   app.use(createPinia())
   app.use(router)
   app.use(ElementPlus)
+  app.use(vuetify)
+  app.use(TDesign)
 
   app.mount('#app')
 }

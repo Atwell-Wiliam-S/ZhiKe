@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, Calendar, MessageSquare, ChevronDown, GraduationCap } from 'lucide-vue-next'
+import { Search, Calendar, MessageSquare, ChevronDown, GraduationCap, Clock, Book, User } from 'lucide-vue-next'
 
 const router = useRouter()
 
@@ -30,391 +30,241 @@ const qaRecords = ref<QaRecord[]>([])
 const setFilter = (filterId: string) => {
   activeFilter.value = filterId
 }
+
+// Mock数据
+const mockQaRecords: QaRecord[] = [
+  {
+    id: 1,
+    question: '什么是Vue 3的Composition API？',
+    answer: 'Vue 3的Composition API是一组新的API，允许开发者使用函数而不是选项对象来组织组件逻辑。它提供了更好的代码组织、类型推断和重用性。',
+    videoTitle: 'Vue 3核心概念',
+    timestamp: '2024-01-15 14:30',
+    courseName: '前端框架进阶'
+  },
+  {
+    id: 2,
+    question: '如何实现Vue组件的通信？',
+    answer: 'Vue组件通信可以通过props、事件、provide/inject、Vuex/Pinia状态管理等方式实现。具体选择哪种方式取决于组件之间的关系和通信复杂度。',
+    videoTitle: 'Vue组件通信',
+    timestamp: '2024-01-14 10:20',
+    courseName: '前端框架进阶'
+  },
+  {
+    id: 3,
+    question: '什么是TypeScript？',
+    answer: 'TypeScript是JavaScript的超集，添加了静态类型系统。它可以帮助开发者在编译时发现错误，提高代码质量和可维护性。',
+    videoTitle: 'TypeScript基础',
+    timestamp: '2024-01-13 16:45',
+    courseName: 'TypeScript实战'
+  },
+  {
+    id: 4,
+    question: '如何优化Vue应用的性能？',
+    answer: 'Vue应用性能优化可以从以下几个方面入手：使用v-if和v-show合理切换、使用computed缓存计算结果、使用虚拟列表处理长列表、合理使用keep-alive等。',
+    videoTitle: 'Vue性能优化',
+    timestamp: '2024-01-12 09:15',
+    courseName: '前端框架进阶'
+  },
+  {
+    id: 5,
+    question: '什么是响应式设计？',
+    answer: '响应式设计是一种设计方法，使网站能够适应不同屏幕尺寸和设备。它通过媒体查询、弹性布局和流体图像等技术实现。',
+    videoTitle: '响应式设计原理',
+    timestamp: '2024-01-11 11:30',
+    courseName: '前端基础'
+  }
+]
+
+onMounted(() => {
+  // 模拟数据加载
+  setTimeout(() => {
+    qaRecords.value = mockQaRecords
+  }, 500)
+})
 </script>
 
 <template>
-  <div class="qa-history-container">
-    <header class="header">
-      <div class="header-content">
-        <div class="logo-section">
-          <GraduationCap class="logo-icon" :size="32" />
-          <h1 class="app-name">ZhiKe</h1>
-        </div>
-        <nav class="nav-menu">
-          <router-link to="/student/home" class="nav-item">首页</router-link>
-          <router-link to="/student/course/1" class="nav-item">我的课程</router-link>
-          <router-link to="/student/qa-history" class="nav-item active">问答历史</router-link>
-          <router-link to="/student/notes" class="nav-item">我的笔记</router-link>
-        </nav>
-        <div class="user-section">
-          <div class="user-avatar">Z</div>
+  <v-app>
+    <!-- 顶部导航栏 -->
+    <v-app-bar app color="white" elevation="1">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between w-full">
+          <!-- Logo -->
+          <div class="flex items-center space-x-2">
+            <GraduationCap class="text-blue-600" :size="32" />
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ZhiKe</h1>
+          </div>
+          
+          <!-- 导航菜单 -->
+          <nav class="hidden md:flex items-center space-x-6">
+            <router-link to="/student/home" class="text-gray-600 hover:text-blue-600 transition-colors">首页</router-link>
+            <router-link to="/student/course/1" class="text-gray-600 hover:text-blue-600 transition-colors">我的课程</router-link>
+            <router-link to="/student/qa-history" class="text-blue-600 font-medium relative">
+              问答历史
+              <div class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
+            </router-link>
+            <router-link to="/student/notes" class="text-gray-600 hover:text-blue-600 transition-colors">我的笔记</router-link>
+          </nav>
+          
+          <!-- 用户头像 -->
+          <div class="flex items-center">
+            <v-avatar color="gradient-blue-purple" size="40" class="cursor-pointer">
+              <span class="text-white font-semibold">Z</span>
+            </v-avatar>
+          </div>
         </div>
       </div>
-    </header>
+    </v-app-bar>
 
-    <main class="main-content">
-      <div class="page-header">
-        <div class="page-title-section">
-          <h2 class="page-title">问答历史</h2>
-          <p class="page-subtitle">查看你与AI助教的所有对话记录</p>
-        </div>
-        <div class="stats-badge">
-          <MessageSquare :size="16" />
-          <span>共 {{ qaRecords.length }} 条</span>
-        </div>
-      </div>
-
-      <div class="filter-bar">
-        <div class="search-box">
-          <Search class="search-icon" :size="18" />
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="search-input"
-            placeholder="搜索问题..."
-          />
-        </div>
-
-        <div class="filter-tabs">
-          <button
-            v-for="filter in filters"
-            :key="filter.id"
-            class="filter-tab"
-            :class="{ active: activeFilter === filter.id }"
-            @click="setFilter(filter.id)"
+    <!-- 主内容区 -->
+    <v-main>
+      <div class="container mx-auto px-4 py-8">
+        <!-- 页面标题 -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">问答历史</h2>
+            <p class="text-gray-500 mt-1">查看你与AI助教的所有对话记录</p>
+          </div>
+          <v-chip
+            color="blue-lighten-5"
+            text-color="blue"
+            class="flex items-center space-x-2"
           >
-            {{ filter.label }}
-          </button>
+            <MessageSquare :size="16" />
+            <span>共 {{ qaRecords.length }} 条</span>
+          </v-chip>
         </div>
 
-        <div class="sort-dropdown">
-          <button class="sort-button">
-            <Calendar :size="16" />
-            <span>最新优先</span>
-            <ChevronDown :size="16" />
-          </button>
+        <!-- 筛选栏 -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+          <!-- 搜索框 -->
+          <v-text-field
+            v-model="searchQuery"
+            prepend-inner-icon="mdi-magnify"
+            placeholder="搜索问题..."
+            variant="outlined"
+            density="compact"
+            class="flex-1"
+          />
+
+          <!-- 时间筛选 -->
+          <div class="flex flex-wrap gap-2">
+            <v-btn
+              v-for="filter in filters"
+              :key="filter.id"
+              :color="activeFilter === filter.id ? 'blue' : 'white'"
+              :variant="activeFilter === filter.id ? 'flat' : 'outlined'"
+              @click="setFilter(filter.id)"
+              size="small"
+              rounded="full"
+            >
+              {{ filter.label }}
+            </v-btn>
+          </div>
+
+          <!-- 排序下拉框 -->
+          <v-menu
+            transition="scale-transition"
+            offset-y
+            max-width="200px"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                variant="outlined"
+                size="small"
+                class="flex items-center space-x-2"
+              >
+                <Calendar :size="16" />
+                <span>最新优先</span>
+                <ChevronDown :size="16" />
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title>最新优先</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>最早优先</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+
+        <!-- 问答列表 -->
+        <div class="qa-list">
+          <v-skeleton-loader
+            v-if="qaRecords.length === 0"
+            type="card-text"
+            class="mx-auto"
+            :loading="true"
+          >
+            <div class="text-center py-12">
+              <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p class="text-gray-500">加载中...</p>
+            </div>
+          </v-skeleton-loader>
+
+          <div v-else class="grid gap-6">
+            <v-card
+              v-for="record in qaRecords"
+              :key="record.id"
+              class="border border-gray-100 hover:shadow-md transition-shadow"
+            >
+              <v-card-item>
+                <div class="flex-1">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <Book size="16" class="text-blue-500" />
+                    <span class="text-sm text-gray-500">{{ record.courseName }}</span>
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ record.question }}</h3>
+                  <p class="text-gray-600 text-sm line-clamp-2 mb-4">{{ record.answer }}</p>
+                  <div class="flex items-center justify-between text-xs text-gray-400">
+                    <div class="flex items-center space-x-2">
+                      <Clock size="14" />
+                      <span>{{ record.timestamp }}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <User size="14" />
+                      <span>AI助教</span>
+                    </div>
+                  </div>
+                </div>
+              </v-card-item>
+              <v-card-actions class="border-t border-gray-100">
+                <v-btn
+                  text
+                  color="blue"
+                  size="small"
+                >
+                  查看详情
+                </v-btn>
+                <v-btn
+                  text
+                  color="gray"
+                  size="small"
+                  class="ml-auto"
+                >
+                  相关视频: {{ record.videoTitle }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </div>
         </div>
       </div>
-
-      <div class="qa-list">
-        <div v-if="qaRecords.length === 0" class="empty-state">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">加载中...</p>
-        </div>
-
-        <div v-else class="qa-cards">
-          <!-- Q&A cards will be rendered here -->
-        </div>
-      </div>
-    </main>
-  </div>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
-.qa-history-container {
-  min-height: 100vh;
-  background-color: var(--color-bg-primary);
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.header {
-  background-color: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-md) var(--spacing-xl);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-lg);
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.logo-icon {
-  color: var(--color-primary);
-}
-
-.app-name {
-  font-size: var(--font-size-xl);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.nav-menu {
-  display: flex;
-  gap: var(--spacing-md);
-}
-
-.nav-item {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  transition: all var(--transition-fast);
-  position: relative;
-}
-
-.nav-item:hover {
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-hover);
-}
-
-.nav-item.active {
-  color: var(--color-primary);
-}
-
-.nav-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: -16px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 32px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-gradient-start), var(--color-gradient-end));
-  border-radius: var(--radius-full);
-}
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: var(--font-size-base);
-}
-
-.main-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-xl);
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-xl);
-}
-
-.page-title-section {
-  flex: 1;
-}
-
-.page-title {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.page-subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.stats-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
-  border-radius: var(--radius-full);
-  color: var(--color-primary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-}
-
-.filter-bar {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.search-box {
-  position: relative;
-  flex: 1;
-  min-width: 240px;
-}
-
-.search-icon {
-  position: absolute;
-  left: var(--spacing-md);
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-muted);
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 44px;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  transition: all var(--transition-fast);
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-}
-
-.search-input::placeholder {
-  color: var(--color-text-muted);
-}
-
-.filter-tabs {
-  display: flex;
-  gap: var(--spacing-xs);
-}
-
-.filter-tab {
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.filter-tab:hover {
-  background: var(--color-bg-hover);
-  color: var(--color-text-primary);
-}
-
-.filter-tab.active {
-  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
-  border-color: transparent;
-  color: white;
-}
-
-.sort-dropdown {
-  margin-left: auto;
-}
-
-.sort-button {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.sort-button:hover {
-  background: var(--color-bg-hover);
-  color: var(--color-text-primary);
-}
-
-.qa-list {
-  margin-top: var(--spacing-lg);
-}
-
-.empty-state {
-  text-align: center;
-  padding: var(--spacing-2xl);
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--color-bg-card);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto var(--spacing-md);
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-@media (max-width: 768px) {
-  .header-content {
-    padding: var(--spacing-md);
-  }
-  
-  .nav-menu {
-    display: none;
-  }
-  
-  .main-content {
-    padding: var(--spacing-xl) var(--spacing-md);
-  }
-  
-  .page-header {
-    flex-direction: column;
-    gap: var(--spacing-md);
-  }
-  
-  .filter-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .search-box {
-    min-width: 100%;
-  }
-  
-  .filter-tabs {
-    width: 100%;
-    justify-content: flex-start;
-  }
-  
-  .sort-dropdown {
-    margin-left: 0;
-    width: 100%;
-  }
-  
-  .sort-button {
-    width: 100%;
-    justify-content: center;
-  }
+.gradient-blue-purple {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
 }
 </style>

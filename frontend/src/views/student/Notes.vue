@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { Search, FileText, GraduationCap, MonitorPlay } from 'lucide-vue-next'
 
 const router = useRouter()
 
@@ -18,408 +17,256 @@ interface Note {
   courseName: string
 }
 
-const notes = ref<Note[]>([])
+const notes = ref<Note[]>([
+  {
+    id: 1,
+    content: '前端开发的定义：前端开发是创建Web页面或app等前端界面呈现给用户的过程，通过HTML、CSS及JavaScript以及衍生出来的各种技术、框架、解决方案，来实现互联网产品的用户界面交互。',
+    videoTitle: '1.1 前端开发简介',
+    timestamp: 150,
+    createdAt: '2023-10-15 14:30',
+    courseName: '前端开发基础'
+  },
+  {
+    id: 2,
+    content: '前端开发的发展历程：从静态页面到动态交互，从jQuery到现代框架（React、Vue、Angular），前端开发技术不断演进。',
+    videoTitle: '1.1 前端开发简介',
+    timestamp: 315,
+    createdAt: '2023-10-15 14:35',
+    courseName: '前端开发基础'
+  },
+  {
+    id: 3,
+    content: 'HTML的基本结构：DOCTYPE、html、head、body等标签的作用和使用方法。',
+    videoTitle: '2.1 HTML简介',
+    timestamp: 90,
+    createdAt: '2023-10-16 10:20',
+    courseName: '前端开发基础'
+  },
+  {
+    id: 4,
+    content: 'CSS选择器的优先级：内联样式 > ID选择器 > 类选择器 > 标签选择器。',
+    videoTitle: '3.2 CSS选择器',
+    timestamp: 240,
+    createdAt: '2023-10-17 09:45',
+    courseName: '前端开发基础'
+  }
+])
 
 const goToVideoPage = () => {
-  router.push('/student/video/1')
+  router.push('/student/video-learning')
+}
+
+// 格式化时间戳
+const formatTimestamp = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
 }
 </script>
 
 <template>
-  <div class="notes-container">
-    <header class="header">
-      <div class="header-content">
-        <div class="logo-section">
-          <GraduationCap class="logo-icon" :size="32" />
-          <h1 class="app-name">ZhiKe</h1>
-        </div>
-        <nav class="nav-menu">
-          <router-link to="/student/home" class="nav-item">首页</router-link>
-          <router-link to="/student/course/1" class="nav-item">我的课程</router-link>
-          <router-link to="/student/qa-history" class="nav-item">问答历史</router-link>
-          <router-link to="/student/notes" class="nav-item active">我的笔记</router-link>
-        </nav>
-        <div class="user-section">
-          <div class="user-avatar">Z</div>
-        </div>
-      </div>
-    </header>
+  <v-app>
+    <!-- 顶部导航栏 -->
+    <v-app-bar
+      color="white"
+      elevation="1"
+      fixed
+    >
+      <v-container class="max-w-7xl">
+        <v-app-bar-title class="d-flex items-center">
+          <v-avatar
+            size="40"
+            class="mr-3"
+            :style="{
+              background: 'linear-gradient(135deg, #6366F1 0%, #3B82F6 100%)'
+            }"
+          >
+            <v-icon size="20" color="white">mdi:school</v-icon>
+          </v-avatar>
+          <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+            ZhiKe
+          </span>
+        </v-app-bar-title>
+        
+        <v-spacer></v-spacer>
+        
+        <v-navigation-drawer-toggle v-if="$vuetify.display.mobile"></v-navigation-drawer-toggle>
+        
+        <v-menu v-if="$vuetify.display.mobile" bottom right>
+          <template v-slot:activator="{ props }">
+            <v-btn
+              variant="text"
+              color="primary"
+              v-bind="props"
+            >
+              <v-icon>mdi:menu</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="item in [
+                { title: '首页', path: '/student/home' },
+                { title: '我的课程', path: '/student/course/1' },
+                { title: '问答历史', path: '/student/qa-history' },
+                { title: '我的笔记', path: '/student/notes' }
+              ]"
+              :key="item.path"
+              :to="item.path"
+              link
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        
+        <v-tabs
+          v-else
+          :value="'/student/notes'"
+          class="hidden-sm-and-down"
+          indicator-color="primary"
+          text-color="primary"
+          active-class="text-primary"
+        >
+          <v-tab :to="'/student/home'">首页</v-tab>
+          <v-tab :to="'/student/course/1'">我的课程</v-tab>
+          <v-tab :to="'/student/qa-history'">问答历史</v-tab>
+          <v-tab :to="'/student/notes'">我的笔记</v-tab>
+        </v-tabs>
+        
+        <v-spacer></v-spacer>
+        
+        <v-avatar
+          size="40"
+          :style="{
+            background: 'linear-gradient(135deg, #6366F1 0%, #3B82F6 100%)'
+          }"
+        >
+          <span class="text-white font-semibold">Z</span>
+        </v-avatar>
+      </v-container>
+    </v-app-bar>
 
-    <main class="main-content">
-      <div class="page-header">
-        <div class="page-title-section">
-          <h2 class="page-title">我的笔记</h2>
-          <p class="page-subtitle">在视频学习过程中记录的知识点</p>
-        </div>
-        <div class="stats-badge">
-          <FileText :size="16" />
-          <span>共 {{ notes.length }} 条</span>
-        </div>
-      </div>
-
-      <div class="filter-bar">
-        <div class="filter-selects">
-          <select v-model="selectedCourse" class="filter-select">
-            <option value="all">全部课程</option>
-          </select>
-          <select v-model="selectedVideo" class="filter-select">
-            <option value="all">全部视频</option>
-          </select>
-        </div>
-
-        <div class="search-box">
-          <Search class="search-icon" :size="18" />
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="search-input"
-            placeholder="搜索笔记内容..."
-          />
-        </div>
-      </div>
-
-      <div class="notes-content">
-        <div v-if="notes.length === 0" class="empty-state">
-          <div class="empty-icon-wrapper">
-            <FileText class="empty-icon" :size="40" />
+    <!-- 主内容 -->
+    <v-main class="pt-20">
+      <v-container class="max-w-7xl py-8">
+        <!-- 页面头部 -->
+        <div class="flex flex-wrap justify-between items-start mb-8 gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">我的笔记</h2>
+            <p class="text-gray-600">在视频学习过程中记录的知识点</p>
           </div>
-          <h3 class="empty-title">暂无笔记</h3>
-          <p class="empty-hint">在视频学习页面按快捷键添加笔记</p>
-          <button class="btn btn-primary" @click="goToVideoPage">
-            <MonitorPlay :size="18" />
-            去学习页
-          </button>
+          <v-chip
+            color="primary"
+            variant="outlined"
+            :style="{
+              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)',
+              borderColor: 'rgba(99, 102, 241, 0.3)'
+            }"
+          >
+            <v-icon left color="primary">mdi:file-document</v-icon>
+            共 {{ notes.length }} 条
+          </v-chip>
         </div>
 
-        <div v-else class="notes-grid">
-          <!-- Notes will be rendered here -->
+        <!-- 过滤栏 -->
+        <div class="flex flex-wrap gap-4 mb-8">
+          <div class="flex gap-2">
+            <v-select
+              v-model="selectedCourse"
+              :items="['全部课程', '前端开发基础', 'JavaScript进阶', 'Vue3实战']"
+              label="课程"
+              variant="outlined"
+              density="comfortable"
+              class="min-w-[140px]"
+            ></v-select>
+            <v-select
+              v-model="selectedVideo"
+              :items="['全部视频', '1.1 前端开发简介', '2.1 HTML简介', '3.2 CSS选择器']"
+              label="视频"
+              variant="outlined"
+              density="comfortable"
+              class="min-w-[140px]"
+            ></v-select>
+          </div>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="searchQuery"
+            label="搜索笔记内容..."
+            variant="outlined"
+            density="comfortable"
+            prepend-inner-icon="mdi:magnify"
+            class="min-w-[240px]"
+          ></v-text-field>
         </div>
-      </div>
-    </main>
-  </div>
+
+        <!-- 笔记内容 -->
+        <div class="notes-content">
+          <div v-if="notes.length === 0" class="text-center py-12">
+            <v-avatar
+              size="80"
+              class="mx-auto mb-4"
+              :style="{
+                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)'
+              }"
+            >
+              <v-icon size="40" color="primary">mdi:file-document</v-icon>
+            </v-avatar>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">暂无笔记</h3>
+            <p class="text-gray-600 mb-6">在视频学习页面按快捷键添加笔记</p>
+            <v-btn
+              color="primary"
+              variant="flat"
+              @click="goToVideoPage"
+              :style="{
+                background: 'linear-gradient(135deg, #6366F1 0%, #3B82F6 100%)',
+                color: 'white',
+                borderRadius: '8px'
+              }"
+            >
+              <v-icon left>mdi:play-circle</v-icon>
+              去学习页
+            </v-btn>
+          </div>
+
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <v-card
+              v-for="note in notes"
+              :key="note.id"
+              variant="outlined"
+              class="hover:shadow-md transition-shadow duration-300"
+              :style="{ borderRadius: '16px' }"
+            >
+              <v-card-title class="text-sm font-semibold text-gray-500">
+                {{ note.courseName }} - {{ note.videoTitle }}
+              </v-card-title>
+              <v-card-text>
+                <p class="text-sm mb-4">{{ note.content }}</p>
+                <div class="flex justify-between items-center text-xs text-gray-500">
+                  <span class="flex items-center">
+                    <v-icon size="14" class="mr-1">mdi:clock-outline</v-icon>
+                    {{ formatTimestamp(note.timestamp) }}
+                  </span>
+                  <span>{{ note.createdAt }}</span>
+                </div>
+              </v-card-text>
+              <v-card-actions class="justify-end">
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  size="small"
+                  @click="goToVideoPage"
+                >
+                  查看视频
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </div>
+        </div>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
-.notes-container {
-  min-height: 100vh;
-  background-color: var(--color-bg-primary);
-}
-
-.header {
-  background-color: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-md) var(--spacing-xl);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-lg);
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.logo-icon {
-  color: var(--color-primary);
-}
-
-.app-name {
-  font-size: var(--font-size-xl);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.nav-menu {
-  display: flex;
-  gap: var(--spacing-md);
-}
-
-.nav-item {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  transition: all var(--transition-fast);
-  position: relative;
-}
-
-.nav-item:hover {
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-hover);
-}
-
-.nav-item.active {
-  color: var(--color-primary);
-}
-
-.nav-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: -16px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 32px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-gradient-start), var(--color-gradient-end));
-  border-radius: var(--radius-full);
-}
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: var(--font-size-base);
-}
-
-.main-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-xl);
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-xl);
-}
-
-.page-title-section {
-  flex: 1;
-}
-
-.page-title {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.page-subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.stats-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
-  border-radius: var(--radius-full);
-  color: var(--color-primary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-}
-
-.filter-bar {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.filter-selects {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-
-.filter-select {
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  min-width: 140px;
-}
-
-.filter-select:hover {
-  border-color: var(--color-primary);
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-}
-
-.search-box {
-  position: relative;
-  flex: 1;
-  min-width: 240px;
-  margin-left: auto;
-}
-
-.search-icon {
-  position: absolute;
-  left: var(--spacing-md);
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-muted);
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 44px;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  transition: all var(--transition-fast);
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-}
-
-.search-input::placeholder {
-  color: var(--color-text-muted);
-}
-
-.notes-content {
-  margin-top: var(--spacing-lg);
-}
-
-.empty-state {
-  text-align: center;
-  padding: var(--spacing-2xl);
-}
-
-.empty-icon-wrapper {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto var(--spacing-lg);
-}
-
-.empty-icon {
-  color: var(--color-primary);
-}
-
-.empty-title {
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.empty-hint {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-lg);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  font-size: var(--font-size-sm);
-  transition: all var(--transition-fast);
-  cursor: pointer;
-  border: none;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
-  color: white;
-  box-shadow: var(--shadow-md);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.notes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--spacing-lg);
-}
-
-@media (max-width: 768px) {
-  .header-content {
-    padding: var(--spacing-md);
-  }
-  
-  .nav-menu {
-    display: none;
-  }
-  
-  .main-content {
-    padding: var(--spacing-xl) var(--spacing-md);
-  }
-  
-  .page-header {
-    flex-direction: column;
-    gap: var(--spacing-md);
-  }
-  
-  .filter-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .filter-selects {
-    width: 100%;
-  }
-  
-  .filter-select {
-    flex: 1;
-    min-width: auto;
-  }
-  
-  .search-box {
-    min-width: 100%;
-    margin-left: 0;
-  }
-  
-  .notes-grid {
-    grid-template-columns: 1fr;
-  }
-}
+/* 自定义样式 */
 </style>
